@@ -1,0 +1,186 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Registered customer or staff profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "role": { "type": "string", "enum": ["customer", "staff", "admin"] },
+        "preferredLanguage": { "type": "string", "enum": ["en", "hi"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "fullName", "phone", "role"]
+    },
+    "ServiceItem": {
+      "title": "ServiceItem",
+      "description": "Fabrication service catalog item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nameEn": { "type": "string", "maxLength": 100 },
+        "nameHi": { "type": "string", "maxLength": 100 },
+        "descriptionEn": { "type": "string", "maxLength": 500 },
+        "descriptionHi": { "type": "string", "maxLength": 500 },
+        "category": { "type": "string" },
+        "startingPrice": { "type": "number" },
+        "estimatedLeadTime": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "displayOrder": { "type": "number" }
+      },
+      "required": ["id", "nameEn", "nameHi", "category", "isActive"]
+    },
+    "ProjectItem": {
+      "title": "ProjectItem",
+      "description": "Showcase of completed fabrication projects",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "titleEn": { "type": "string", "maxLength": 150 },
+        "titleHi": { "type": "string", "maxLength": 150 },
+        "descriptionEn": { "type": "string", "maxLength": 500 },
+        "descriptionHi": { "type": "string", "maxLength": 500 },
+        "category": { "type": "string" },
+        "location": { "type": "string", "maxLength": 100 },
+        "completedYear": { "type": "string" },
+        "publicationStatus": { "type": "string", "enum": ["draft", "published"] }
+      },
+      "required": ["id", "titleEn", "titleHi", "category", "publicationStatus"]
+    },
+    "EnquiryItem": {
+      "title": "EnquiryItem",
+      "description": "Customer quotation inquiry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "referenceNumber": { "type": "string", "maxLength": 30 },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "format": "email" },
+        "serviceCategory": { "type": "string" },
+        "projectTitle": { "type": "string", "maxLength": 200 },
+        "projectDescription": { "type": "string", "maxLength": 2000 },
+        "dimensions": { "type": "string", "maxLength": 100 },
+        "quantity": { "type": "number" },
+        "location": { "type": "string", "maxLength": 200 },
+        "status": { "type": "string", "enum": ["pending", "quoted", "booked", "in_progress", "completed", "cancelled"] },
+        "internalNotes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "referenceNumber", "customerName", "phone", "serviceCategory", "projectTitle", "projectDescription", "location", "status"]
+    },
+    "QuotationItem": {
+      "title": "QuotationItem",
+      "description": "Official fabrication quotation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "enquiryId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "quotationNumber": { "type": "string", "maxLength": 30 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "projectTitle": { "type": "string", "maxLength": 200 },
+        "subtotal": { "type": "number" },
+        "taxAmount": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "advancePercent": { "type": "number" },
+        "advanceAmount": { "type": "number" },
+        "currency": { "type": "string" },
+        "validUntil": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sent", "accepted", "rejected", "expired"] },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "quotationNumber", "customerName", "totalAmount", "advanceAmount", "status"]
+    },
+    "BookingItem": {
+      "title": "BookingItem",
+      "description": "Site visit and installation appointment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "serviceCategory": { "type": "string" },
+        "requestedDate": { "type": "string" },
+        "confirmedDate": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "siteAddress": { "type": "string", "maxLength": 300 },
+        "status": { "type": "string", "enum": ["requested", "under_review", "quotation_sent", "awaiting_payment", "confirmed", "in_progress", "completed", "cancelled"] },
+        "customerNotes": { "type": "string", "maxLength": 500 },
+        "internalNotes": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "customerName", "customerPhone", "serviceCategory", "requestedDate", "siteAddress", "status"]
+    },
+    "PaymentRecord": {
+      "title": "PaymentRecord",
+      "description": "Transaction and receipt record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "quotationId": { "type": "string" },
+        "referenceNo": { "type": "string" },
+        "provider": { "type": "string" },
+        "providerPaymentId": { "type": "string" },
+        "amountPaise": { "type": "number" },
+        "amountInr": { "type": "number" },
+        "currency": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "success", "failed", "refunded"] },
+        "verifiedAt": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "referenceNo", "amountInr", "status"]
+    },
+    "TestConnection": {
+      "title": "TestConnection",
+      "description": "Probe document for checking Firestore connectivity",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles partitioned by UID"
+    },
+    "/services/{serviceId}": {
+      "schema": "ServiceItem",
+      "description": "Active fabrication services catalog"
+    },
+    "/projects/{projectId}": {
+      "schema": "ProjectItem",
+      "description": "Showcase of completed metal fabrication projects"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "EnquiryItem",
+      "description": "Customer quotation requests"
+    },
+    "/quotations/{quotationId}": {
+      "schema": "QuotationItem",
+      "description": "Official fabrication quotations"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "BookingItem",
+      "description": "Site visits and installation schedules"
+    },
+    "/payments/{paymentId}": {
+      "schema": "PaymentRecord",
+      "description": "Payment records and receipts"
+    },
+    "/test/{docId}": {
+      "schema": "TestConnection",
+      "description": "Connection test probe"
+    }
+  }
+}

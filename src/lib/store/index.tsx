@@ -12,6 +12,10 @@ import {
   QuotationLineItem
 } from '../../types';
 import { supabase, isSupabaseConfigured } from '../supabase/client';
+import { db, auth, googleProvider } from '../firebase/client';
+import { signInWithPopup, signOut as fbSignOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { collection, doc, setDoc, onSnapshot, getDocs } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from '../firebase/error';
 
 export const INITIAL_BUSINESS_SETTINGS: BusinessSettings = {
   business_name: 'Anup Fabrication',
@@ -316,6 +320,8 @@ interface AppContextType {
   auditLogs: AuditLogItem[];
   logAuditAction: (action: string, entity_type: string, entity_id: string, details: string) => void;
   switchToRole: (role: 'visitor' | 'customer' | 'admin') => void;
+  signInWithGoogle: () => Promise<void>;
+  signOutUser: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -408,6 +414,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
   };
 
+  // Listen for real Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (fbUser: FirebaseUser | null) => {
+      if (fbUser) {
+        const isAdmin = fbUser.email === 'suresh.solanky@gmail.com' || fbUser.email === 'admin@anupfabrication.infinityfree.me';
+        setCurrentUser({
+          id: fbUser.uid,
+          email: fbUser.email || '',
+          full_name: fbUser.displayName || 'Customer',
+          phone: fbUser.phoneNumber || '9811223344',
+          preferred_language: 'en',
+          role: isAdmin ? 'admin' : 'customer',
+          created_at: new Date().toISOString()
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error('Google sign-in error:', err);
+    }
+  };
+
+  const signOutUser = async () => {
+    try {
+      await fbSignOut(auth);
+      setCurrentUser(null);
+    } catch (err) {
+      console.error('Sign-out error:', err);
+    }
+  };
+
   const createEnquiry = async (
     enquiryData: Omit<EnquiryItem, 'id' | 'reference_number' | 'created_at' | 'updated_at' | 'status'>
   ): Promise<EnquiryItem> => {
@@ -424,6 +466,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setEnquiries(prev => [newEnquiry, ...prev]);
     logAuditAction('ENQUIRY_SUBMITTED', 'enquiry', newEnquiry.id, `Customer ${newEnquiry.customer_name} submitted quote request ${refNo}`);
+
+    // Persist to Firestore if online
+    try {
+      await setDoc(doc(db, 'enquiries', newEnquiry.id), {
+        referenceNumber: newEnquiry.reference_number,
+        customerId: newEnquiry.customer_id || null,
+        customerName: newEnquiry.customer_name,
+        phone: newEnquiry.phone,
+        email: newEnquiry.email || null,
+        serviceCategory: newEnquiry.service_category,
+        projectTitle: newEnquiry.project_title,
+        projectDescription: newEnquiry.project_description,
+        dimensions: newEnquiry.dimensions || null,
+        quantity: newEnquiry.quantity || 1,
+        location: newEnquiry.location,
+        status: newEnquiry.status,
+        createdAt: newEnquiry.created_at
+      });
+    } catch (err) {
+      console.warn('Firestore write warning:', err);
+    }
+
     return newEnquiry;
   };
 
@@ -550,7 +614,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         recordPayment,
         auditLogs,
         logAuditAction,
-        switchToRole
+        switchToRole,
+        signInWithGoogle,
+        signOutUser
       }}
     >
       {children}

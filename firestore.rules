@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Default-Deny Catch-All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'suresh.solanky@gmail.com' ||
+        request.auth.token.email == 'admin@anupfabrication.infinityfree.me' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Test connection probe
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && request.resource.data.role == 'customer';
+      allow update: if (isOwner(userId) && request.resource.data.role == resource.data.role) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Services Catalog (Public read, admin write)
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Projects Portfolio (Public read, admin write)
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Enquiries (Anyone can submit, owners and admin can read)
+    match /enquiries/{enquiryId} {
+      allow create: if request.resource.data.customerName is string &&
+                       request.resource.data.phone is string &&
+                       request.resource.data.projectTitle is string;
+      allow get: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    // Quotations (Customers view own quotes, admin manages)
+    match /quotations/{quotationId} {
+      allow get: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow update: if (isSignedIn() && resource.data.customerId == request.auth.uid && 
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])) || isAdmin();
+      allow create, delete: if isAdmin();
+    }
+
+    // Bookings (Customers view own bookings, admin manages)
+    match /bookings/{bookingId} {
+      allow get: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    // Payments (Customer reads own payments, admin manages)
+    match /payments/{paymentId} {
+      allow get: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow create: if isSignedIn() || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+  }
+}

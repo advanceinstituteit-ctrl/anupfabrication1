@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, openQuoteModal }) => {
   const { language, setLanguage, t } = useLanguage();
-  const { currentUser, switchToRole, businessSettings } = useAppStore();
+  const { currentUser, switchToRole, businessSettings, signInWithGoogle, signOutUser } = useAppStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
 
@@ -140,6 +140,22 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, ope
                   <span>Public Visitor</span>
                   {!currentUser && <span className="text-amber-400">✓</span>}
                 </button>
+                <div className="border-t border-slate-800 my-1 pt-1">
+                  <button
+                    onClick={() => { signInWithGoogle(); setRoleMenuOpen(false); }}
+                    className="w-full text-left px-3 py-2 text-amber-400 hover:bg-slate-800 flex items-center justify-between cursor-pointer font-semibold"
+                  >
+                    <span>Sign In with Google</span>
+                  </button>
+                  {currentUser && (
+                    <button
+                      onClick={() => { signOutUser(); setRoleMenuOpen(false); }}
+                      className="w-full text-left px-3 py-1.5 text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-between cursor-pointer text-[11px]"
+                    >
+                      <span>Sign Out</span>
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
