@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useAppStore } from '../../lib/store';
-import { EnquiryItem, QuotationItem, QuotationLineItem, ServiceItem } from '../../types';
+import { EnquiryItem, QuotationItem, QuotationLineItem, ServiceItem, OrderItem, FabricationStatus } from '../../types';
 import { QuotationViewer } from '../quotations/QuotationViewer';
 import { 
   BarChart3, 
@@ -17,7 +17,10 @@ import {
   CheckCircle2, 
   Eye, 
   Edit3, 
-  DollarSign
+  DollarSign,
+  Truck,
+  Activity,
+  Layers
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -30,15 +33,21 @@ export const AdminDashboard: React.FC = () => {
     bookings, 
     updateBookingStatus, 
     payments, 
+    orders,
+    updateOrderStatus,
+    createOrder,
     services, 
     toggleServiceActive, 
     updateService, 
     auditLogs 
   } = useAppStore();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'enquiries' | 'quote_generator' | 'bookings' | 'services' | 'reports' | 'audit'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'enquiries' | 'quote_generator' | 'bookings' | 'services' | 'reports' | 'audit'>('overview');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedQuoteForView, setSelectedQuoteForView] = useState<QuotationItem | null>(null);
+  const [orderEditingId, setOrderEditingId] = useState<string | null>(null);
+  const [customStation, setCustomStation] = useState('');
+  const [customNote, setCustomNote] = useState('');
 
   // Quote Generator Form State
   const [selectedEnquiryForQuote, setSelectedEnquiryForQuote] = useState<EnquiryItem | null>(null);
@@ -266,6 +275,18 @@ export const AdminDashboard: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setActiveTab('orders')}
+          className={`px-4 py-2 rounded transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+            activeTab === 'orders' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <Activity className="w-3.5 h-3.5" />
+          <span>Live Order Tracker</span>
+          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20">{orders.length}</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        </button>
+
+        <button
           onClick={() => setActiveTab('enquiries')}
           className={`px-4 py-2 rounded transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'enquiries' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
@@ -403,6 +424,223 @@ export const AdminDashboard: React.FC = () => {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: Orders & Live Fabrication Tracker */}
+      {activeTab === 'orders' && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-white">Workshop Live Order & Status Control</h2>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span>LIVE FIRESTORE DISPATCH</span>
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                Update customer project statuses in real time. Changes reflect immediately on the customer portal.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-amber-400 font-semibold bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-lg">
+                Total Orders: {orders.length}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {orders.map((ord) => (
+              <div key={ord.id} className="bg-slate-900 border border-slate-800 rounded-xl p-5 sm:p-6 space-y-4 hover:border-slate-700 transition-colors">
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="font-mono text-sm font-bold text-amber-400">{ord.order_number}</span>
+                      <span className="text-slate-600">·</span>
+                      <span className="text-xs text-white font-medium">{ord.customer_name}</span>
+                      <span className="text-xs text-slate-400 font-mono">(+91 {ord.customer_phone})</span>
+                    </div>
+                    <h3 className="text-base font-bold text-white">{ord.project_title}</h3>
+                    <div className="text-xs text-slate-400 mt-0.5 font-mono">
+                      {ord.dimensions && <span>Specs: {ord.dimensions} · </span>}
+                      <span>Target: {ord.estimated_delivery_date}</span>
+                    </div>
+                  </div>
+
+                  {/* Status Picker Pill */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-400 font-mono">Status:</span>
+                    <select
+                      value={ord.status}
+                      onChange={(e) => {
+                        const newStatus = e.target.value as FabricationStatus;
+                        updateOrderStatus(ord.id, newStatus);
+                      }}
+                      className="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono font-bold text-amber-400 focus:outline-none focus:border-amber-500 cursor-pointer"
+                    >
+                      <option value="pending_approval">Pending Approval</option>
+                      <option value="in_fabrication">In Fabrication</option>
+                      <option value="ready_for_delivery">Ready for Delivery</option>
+                      <option value="delivered">Delivered & Installed</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Progress & Station details */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-950/60 p-4 rounded-lg">
+                  <div>
+                    <span className="text-slate-500 block uppercase font-mono text-[10px] mb-1">Active Workshop Station</span>
+                    <div className="font-bold text-slate-200">{ord.workshop_station}</div>
+                    <div className="text-[11px] text-slate-400 mt-0.5">{ord.current_stage_description}</div>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-500 block uppercase font-mono text-[10px] mb-1">Progress Completion</span>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-amber-500 rounded-full"
+                          style={{ width: `${ord.progress_percent}%` }}
+                        />
+                      </div>
+                      <span className="font-mono font-bold text-amber-400">{ord.progress_percent}%</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => {
+                        if (orderEditingId === ord.id) {
+                          setOrderEditingId(null);
+                        } else {
+                          setOrderEditingId(ord.id);
+                          setCustomStation(ord.workshop_station);
+                          setCustomNote('');
+                        }
+                      }}
+                      className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs font-semibold cursor-pointer transition-colors"
+                    >
+                      {orderEditingId === ord.id ? 'Cancel' : 'Edit Bay / Stage'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quick Edit Drawer for Workshop Master */}
+                {orderEditingId === ord.id && (
+                  <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-3 text-xs">
+                    <div className="font-bold text-amber-400 uppercase font-mono text-[11px]">
+                      Update Station & Add Progress Milestone
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-slate-400 mb-1">Workshop Station Name</label>
+                        <input
+                          type="text"
+                          value={customStation}
+                          onChange={(e) => setCustomStation(e.target.value)}
+                          placeholder="e.g. Painting Bay, Welding Station #2, QC Bay..."
+                          className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white text-xs"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-slate-400 mb-1">Milestone Progress Note</label>
+                        <input
+                          type="text"
+                          value={customNote}
+                          onChange={(e) => setCustomNote(e.target.value)}
+                          placeholder="e.g. Anti-rust primer applied. Assembly moving to painting booth."
+                          className="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          await updateOrderStatus(
+                            ord.id,
+                            ord.status,
+                            customStation || undefined,
+                            undefined,
+                            customNote || undefined,
+                            customNote || undefined
+                          );
+                          setOrderEditingId(null);
+                        }}
+                        className="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded text-xs cursor-pointer"
+                      >
+                        Save & Dispatch Live Update
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick 1-Click Status Step Buttons */}
+                <div className="flex items-center justify-between gap-2 flex-wrap pt-1 text-xs">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-slate-400 font-mono text-[11px]">Quick Transition:</span>
+                    <button
+                      onClick={() => updateOrderStatus(ord.id, 'pending_approval')}
+                      className={`px-2.5 py-1 rounded text-[11px] font-mono cursor-pointer border ${
+                        ord.status === 'pending_approval'
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+                          : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                      }`}
+                    >
+                      1. Pending Approval
+                    </button>
+                    <button
+                      onClick={() => updateOrderStatus(ord.id, 'in_fabrication')}
+                      className={`px-2.5 py-1 rounded text-[11px] font-mono cursor-pointer border ${
+                        ord.status === 'in_fabrication'
+                          ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
+                          : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                      }`}
+                    >
+                      2. In Fabrication
+                    </button>
+                    <button
+                      onClick={() => updateOrderStatus(ord.id, 'ready_for_delivery')}
+                      className={`px-2.5 py-1 rounded text-[11px] font-mono cursor-pointer border ${
+                        ord.status === 'ready_for_delivery'
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold'
+                          : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                      }`}
+                    >
+                      3. Ready for Delivery
+                    </button>
+                    <button
+                      onClick={() => updateOrderStatus(ord.id, 'delivered')}
+                      className={`px-2.5 py-1 rounded text-[11px] font-mono cursor-pointer border ${
+                        ord.status === 'delivered'
+                          ? 'bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-bold'
+                          : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                      }`}
+                    >
+                      4. Delivered
+                    </button>
+                  </div>
+
+                  <a
+                    href={`https://wa.me/91${ord.customer_phone}?text=${encodeURIComponent(
+                      `Hello ${ord.customer_name}, here is an update regarding Order ${ord.order_number} (${ord.project_title}): Current Status is ${ord.status.replace('_', ' ').toUpperCase()} at ${ord.workshop_station}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-semibold"
+                  >
+                    <span>Notify Customer via WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

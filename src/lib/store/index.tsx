@@ -9,7 +9,9 @@ import {
   PaymentRecord,
   BusinessSettings,
   AuditLogItem,
-  QuotationLineItem
+  QuotationLineItem,
+  OrderItem,
+  FabricationStatus
 } from '../../types';
 import { supabase, isSupabaseConfigured } from '../supabase/client';
 import { db, auth, googleProvider } from '../firebase/client';
@@ -296,6 +298,155 @@ export const INITIAL_PAYMENTS: PaymentRecord[] = [
   }
 ];
 
+export const INITIAL_ORDERS: OrderItem[] = [
+  {
+    id: 'ord-101',
+    order_number: 'AF-ORD-2026-101',
+    customer_id: 'cust-demo-1',
+    customer_name: 'Rajesh Sharma',
+    customer_phone: '9811223344',
+    project_title: 'Main Entrance Sliding Gate & Boundary Railing',
+    service_category: 'gates_grills',
+    dimensions: '14ft x 7ft gate + 40ft boundary railing',
+    material_grade: 'Tata Structural MS Box & Jindal Solid Bar',
+    status: 'in_fabrication',
+    current_stage_description: 'Precision MIG welding of 40x40mm box frame & alignment of roller bearing track channel in progress.',
+    estimated_delivery_date: '2026-11-05',
+    workshop_station: 'MIG Welding & Grinding Bay #2',
+    progress_percent: 65,
+    timeline: [
+      {
+        id: 't-1',
+        stage: 'Order Confirmed & Advance Verified',
+        status: 'completed',
+        timestamp: '2026-10-22T10:15:00Z',
+        note: 'Advance payment of ₹38,884 received. Raw materials requisitioned.'
+      },
+      {
+        id: 't-2',
+        stage: 'CAD Layout & Steel Profile Cutting',
+        status: 'completed',
+        timestamp: '2026-10-23T11:00:00Z',
+        note: 'High-precision cold saw cutting completed within ±1mm tolerance.'
+      },
+      {
+        id: 't-3',
+        stage: 'In Fabrication (Welding & Frame Assembly)',
+        status: 'current',
+        timestamp: '2026-10-24T08:30:00Z',
+        note: 'MIG welding seam penetration verified. Anti-spatter clean-up underway.'
+      },
+      {
+        id: 't-4',
+        stage: 'Anti-Rust Zinc Chromate Primer & Paint',
+        status: 'upcoming',
+        note: 'Dual-coat epoxy primer scheduled in spray bay.'
+      },
+      {
+        id: 't-5',
+        stage: 'Ready for Delivery & On-Site Installation',
+        status: 'upcoming',
+        note: 'Scheduled for installation at Plot 42, Sector 12, Dwarka.'
+      }
+    ],
+    created_at: '2026-10-22T10:15:00Z',
+    updated_at: '2026-10-24T08:30:00Z'
+  },
+  {
+    id: 'ord-102',
+    order_number: 'AF-ORD-2026-102',
+    customer_id: 'cust-demo-2',
+    customer_name: 'Vikas Gupta',
+    customer_phone: '9873112233',
+    project_title: 'Warehouse Factory Shed 50ft x 30ft Tubular Trusses',
+    service_category: 'structural_steel',
+    dimensions: '50ft x 30ft (1500 sq ft)',
+    material_grade: 'Grade YSt 310 Structural Steel Tubes & C-Channels',
+    status: 'pending_approval',
+    current_stage_description: 'Structural engineering drawings and wind load calculations submitted for client sign-off.',
+    estimated_delivery_date: '2026-11-20',
+    workshop_station: 'Design & Engineering Drafting Desk',
+    progress_percent: 25,
+    timeline: [
+      {
+        id: 't-10',
+        stage: 'Site Measurement & Foundation Inspection',
+        status: 'completed',
+        timestamp: '2026-10-23T14:00:00Z',
+        note: 'Column center distances checked at Nangli Sakrawati site.'
+      },
+      {
+        id: 't-11',
+        stage: 'Pending Approval (Client Sign-Off)',
+        status: 'current',
+        timestamp: '2026-10-24T09:00:00Z',
+        note: 'Awaiting client approval on truss node gusset plate specs.'
+      },
+      {
+        id: 't-12',
+        stage: 'In Fabrication (Truss Jig Assembly)',
+        status: 'upcoming',
+        note: 'Workshop jig will be set up upon drawing approval.'
+      },
+      {
+        id: 't-13',
+        stage: 'Ready for Delivery & Crane Erection',
+        status: 'upcoming',
+        note: 'Transport vehicle and 15-ton mobile crane on standby.'
+      }
+    ],
+    created_at: '2026-10-23T09:10:00Z',
+    updated_at: '2026-10-24T09:00:00Z'
+  },
+  {
+    id: 'ord-103',
+    order_number: 'AF-ORD-2026-103',
+    customer_id: 'cust-demo-1',
+    customer_name: 'Rajesh Sharma',
+    customer_phone: '9811223344',
+    project_title: 'Stainless Steel 304 Balcony Security Grills',
+    service_category: 'gates_grills',
+    dimensions: '3 Panels of 6ft x 4ft',
+    material_grade: 'SS 304 High Satin Polish',
+    status: 'ready_for_delivery',
+    current_stage_description: 'Final quality inspection passed. Wrapped in protective film and staged for delivery truck.',
+    estimated_delivery_date: '2026-10-25',
+    workshop_station: 'Final QC & Dispatch Staging Bay',
+    progress_percent: 92,
+    timeline: [
+      {
+        id: 't-21',
+        stage: 'Order Placed & Dimensions Locked',
+        status: 'completed',
+        timestamp: '2026-10-18T10:00:00Z',
+        note: '304 stainless steel pipe bundle received.'
+      },
+      {
+        id: 't-22',
+        stage: 'In Fabrication (TIG Welding & Satin Finish)',
+        status: 'completed',
+        timestamp: '2026-10-23T16:00:00Z',
+        note: 'Argon shielded TIG welding and 600-grit satin buffing complete.'
+      },
+      {
+        id: 't-23',
+        stage: 'Ready for Delivery (Staged at Workshop)',
+        status: 'current',
+        timestamp: '2026-10-24T07:45:00Z',
+        note: 'QC sticker applied. Client informed for delivery tomorrow morning.'
+      },
+      {
+        id: 't-24',
+        stage: 'Delivered & Installed on Site',
+        status: 'upcoming',
+        note: 'Scheduled delivery window: 10:00 AM - 1:00 PM.'
+      }
+    ],
+    created_at: '2026-10-18T10:00:00Z',
+    updated_at: '2026-10-24T07:45:00Z'
+  }
+];
+
 interface AppContextType {
   currentUser: UserProfile | null;
   setCurrentUser: (user: UserProfile | null) => void;
@@ -317,6 +468,17 @@ interface AppContextType {
   updateBookingStatus: (id: string, status: BookingItem['status'], confirmedDate?: string, notes?: string) => void;
   payments: PaymentRecord[];
   recordPayment: (payment: Omit<PaymentRecord, 'id' | 'created_at'>) => PaymentRecord;
+  orders: OrderItem[];
+  isOrdersLiveSynced: boolean;
+  updateOrderStatus: (
+    orderId: string, 
+    status: FabricationStatus, 
+    station?: string, 
+    progressPercent?: number, 
+    description?: string,
+    note?: string
+  ) => Promise<void>;
+  createOrder: (order: Omit<OrderItem, 'id' | 'created_at' | 'updated_at'>) => Promise<OrderItem>;
   auditLogs: AuditLogItem[];
   logAuditAction: (action: string, entity_type: string, entity_id: string, details: string) => void;
   switchToRole: (role: 'visitor' | 'customer' | 'admin') => void;
@@ -347,6 +509,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [quotations, setQuotations] = useState<QuotationItem[]>(INITIAL_QUOTATIONS);
   const [bookings, setBookings] = useState<BookingItem[]>(INITIAL_BOOKINGS);
   const [payments, setPayments] = useState<PaymentRecord[]>(INITIAL_PAYMENTS);
+  const [orders, setOrders] = useState<OrderItem[]>(INITIAL_ORDERS);
+  const [isOrdersLiveSynced, setIsOrdersLiveSynced] = useState<boolean>(false);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([
     {
       id: 'log-1',
@@ -431,6 +595,60 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     });
     return () => unsubscribe();
+  }, []);
+
+  // Real-time Firestore onSnapshot listener for Fabrication Orders
+  useEffect(() => {
+    let isMounted = true;
+    try {
+      const unsub = onSnapshot(
+        collection(db, 'orders'),
+        (snapshot) => {
+          if (!isMounted) return;
+          setIsOrdersLiveSynced(true);
+          if (!snapshot.empty) {
+            const remoteOrders: OrderItem[] = snapshot.docs.map(d => {
+              const data = d.data();
+              return {
+                id: d.id,
+                order_number: data.orderNumber || data.order_number || d.id,
+                customer_id: data.customerId || data.customer_id || '',
+                customer_name: data.customerName || data.customer_name || 'Customer',
+                customer_phone: data.customerPhone || data.customer_phone || '',
+                project_title: data.projectTitle || data.project_title || 'Metal Fabrication',
+                service_category: data.serviceCategory || data.service_category || 'gates_grills',
+                dimensions: data.dimensions || '',
+                material_grade: data.materialGrade || data.material_grade || '',
+                status: (data.status || 'pending_approval') as FabricationStatus,
+                current_stage_description: data.currentStageDescription || data.current_stage_description || '',
+                estimated_delivery_date: data.estimatedDeliveryDate || data.estimated_delivery_date || '',
+                workshop_station: data.workshopStation || data.workshop_station || 'Workshop Bay',
+                progress_percent: data.progressPercent !== undefined ? data.progressPercent : (data.progress_percent || 0),
+                timeline: data.timeline || [],
+                created_at: data.createdAt || data.created_at || new Date().toISOString(),
+                updated_at: data.updatedAt || data.updated_at || new Date().toISOString()
+              };
+            });
+
+            setOrders(prev => {
+              const map = new Map<string, OrderItem>();
+              prev.forEach(o => map.set(o.id, o));
+              remoteOrders.forEach(o => map.set(o.id, o));
+              return Array.from(map.values());
+            });
+          }
+        },
+        (error) => {
+          handleFirestoreError(error, OperationType.GET, 'orders');
+        }
+      );
+      return () => {
+        isMounted = false;
+        unsub();
+      };
+    } catch (err) {
+      console.warn('Real-time listener setup warning:', err);
+    }
   }, []);
 
   const signInWithGoogle = async () => {
@@ -563,6 +781,120 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return newPayment;
   };
 
+  const updateOrderStatus = async (
+    orderId: string,
+    status: FabricationStatus,
+    station?: string,
+    progressPercent?: number,
+    description?: string,
+    note?: string
+  ): Promise<void> => {
+    const now = new Date().toISOString();
+    let updatedOrderObj: OrderItem | null = null;
+
+    setOrders(prev => prev.map(o => {
+      if (o.id === orderId) {
+        const nextTimeline = [...(o.timeline || [])];
+        const stageLabel = 
+          status === 'pending_approval' ? 'Pending Approval' :
+          status === 'in_fabrication' ? 'In Fabrication (Workshop)' :
+          status === 'ready_for_delivery' ? 'Ready for Delivery' : 'Delivered & Installed';
+
+        nextTimeline.push({
+          id: `t-${Date.now()}`,
+          stage: stageLabel,
+          status: 'completed',
+          timestamp: now,
+          note: note || description || `Status updated to ${stageLabel}`
+        });
+
+        const calculatedProgress = progressPercent !== undefined ? progressPercent : (
+          status === 'pending_approval' ? 25 :
+          status === 'in_fabrication' ? 65 :
+          status === 'ready_for_delivery' ? 90 : 100
+        );
+
+        const updated: OrderItem = {
+          ...o,
+          status,
+          workshop_station: station !== undefined ? station : o.workshop_station,
+          progress_percent: calculatedProgress,
+          current_stage_description: description !== undefined ? description : o.current_stage_description,
+          timeline: nextTimeline,
+          updated_at: now
+        };
+        updatedOrderObj = updated;
+        return updated;
+      }
+      return o;
+    }));
+
+    logAuditAction('ORDER_STATUS_UPDATED', 'order', orderId, `Order status set to ${status}`);
+
+    // Real-time Firestore sync
+    try {
+      const orderToSave = updatedOrderObj || orders.find(o => o.id === orderId);
+      if (orderToSave) {
+        await setDoc(doc(db, 'orders', orderId), {
+          orderNumber: orderToSave.order_number,
+          customerId: orderToSave.customer_id,
+          customerName: orderToSave.customer_name,
+          customerPhone: orderToSave.customer_phone,
+          projectTitle: orderToSave.project_title,
+          serviceCategory: orderToSave.service_category,
+          dimensions: orderToSave.dimensions || null,
+          materialGrade: orderToSave.material_grade || null,
+          status,
+          workshopStation: station || orderToSave.workshop_station,
+          progressPercent: orderToSave.progress_percent,
+          currentStageDescription: description || orderToSave.current_stage_description,
+          estimatedDeliveryDate: orderToSave.estimated_delivery_date,
+          timeline: orderToSave.timeline,
+          updatedAt: now
+        }, { merge: true });
+      }
+    } catch (err) {
+      console.warn('Firestore order update notice:', err);
+    }
+  };
+
+  const createOrder = async (orderData: Omit<OrderItem, 'id' | 'created_at' | 'updated_at'>): Promise<OrderItem> => {
+    const now = new Date().toISOString();
+    const newOrder: OrderItem = {
+      ...orderData,
+      id: `ord-${Date.now()}`,
+      created_at: now,
+      updated_at: now
+    };
+    setOrders(prev => [newOrder, ...prev]);
+    logAuditAction('ORDER_CREATED', 'order', newOrder.id, `Created order ${newOrder.order_number} for ${newOrder.customer_name}`);
+
+    try {
+      await setDoc(doc(db, 'orders', newOrder.id), {
+        orderNumber: newOrder.order_number,
+        customerId: newOrder.customer_id,
+        customerName: newOrder.customer_name,
+        customerPhone: newOrder.customer_phone,
+        projectTitle: newOrder.project_title,
+        serviceCategory: newOrder.service_category,
+        dimensions: newOrder.dimensions || null,
+        materialGrade: newOrder.material_grade || null,
+        status: newOrder.status,
+        workshopStation: newOrder.workshop_station,
+        progressPercent: newOrder.progress_percent,
+        currentStageDescription: newOrder.current_stage_description,
+        estimatedDeliveryDate: newOrder.estimated_delivery_date,
+        timeline: newOrder.timeline,
+        createdAt: now,
+        updatedAt: now
+      });
+    } catch (err) {
+      console.warn('Firestore order create notice:', err);
+    }
+
+    return newOrder;
+  };
+
   const switchToRole = (role: 'visitor' | 'customer' | 'admin') => {
     if (role === 'visitor') {
       setCurrentUser(null);
@@ -612,6 +944,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateBookingStatus,
         payments,
         recordPayment,
+        orders,
+        isOrdersLiveSynced,
+        updateOrderStatus,
+        createOrder,
         auditLogs,
         logAuditAction,
         switchToRole,
@@ -631,3 +967,4 @@ export const useAppStore = (): AppContextType => {
   }
   return context;
 };
+

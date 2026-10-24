@@ -2,6 +2,40 @@ export type Language = 'en' | 'hi';
 
 export type UserRole = 'customer' | 'staff' | 'admin';
 
+export type FabricationStatus = 
+  | 'pending_approval'
+  | 'in_fabrication'
+  | 'ready_for_delivery'
+  | 'delivered';
+
+export interface OrderTimelineItem {
+  id: string;
+  stage: string;
+  status: 'completed' | 'current' | 'upcoming';
+  timestamp?: string;
+  note?: string;
+}
+
+export interface OrderItem {
+  id: string;
+  order_number: string;
+  customer_id: string;
+  customer_name: string;
+  customer_phone: string;
+  project_title: string;
+  service_category: ServiceCategory;
+  dimensions?: string;
+  material_grade?: string;
+  status: FabricationStatus;
+  current_stage_description: string;
+  estimated_delivery_date: string;
+  workshop_station: string;
+  progress_percent: number;
+  timeline: OrderTimelineItem[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface UserProfile {
   id: string;
   email: string;

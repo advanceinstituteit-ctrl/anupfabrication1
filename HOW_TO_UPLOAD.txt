@@ -1,0 +1,34 @@
+========================================================================
+ANUP FABRICATION - INFINITYFREE DEPLOYMENT GUIDE (403 ERROR FIX)
+========================================================================
+
+403 Forbidden error aane ka mukhya kaaran:
+InfinityFree ke `htdocs` folder me direct `index.html` ya `index.php` nahi tha, 
+ya poora project source code upload ho gaya tha jisme dist/ alag folder me tha.
+
+Humne `htdocs_upload.zip` ready kar diya hai.
+
+STEP-BY-STEP UPLOAD INSTRUCTIONS (MonstaFTP / File Manager):
+------------------------------------------------------------------------
+1. InfinityFree vPanel me jaayein aur **Online File Manager** (MonstaFTP) open karein.
+2. `htdocs` folder ke andar jaayein.
+3. Purani saari files aur folders ko SELECT ALL karke **DELETE** kar dein (taaki clean ho jaaye).
+4. `htdocs_upload.zip` ko apne computer par download karein.
+5. `htdocs_upload.zip` ko unzip (extract) karein apne computer par.
+   Aapko ye files dikhengi:
+   - index.html
+   - index.php
+   - .htaccess
+   - assets/ (folder)
+6. In sabhi files aur folder ko seedhe `htdocs` ke andar **UPLOAD** kar dein.
+   (IMPORTANT: `index.html` direct `htdocs/index.html` hona chahiye, kisi andar ke subfolder me nahi).
+
+7. Agar aap zip file direct upload karna chahte hain:
+   - `htdocs_upload.zip` ko `htdocs` me upload karein.
+   - Us par Right-Click karke **Extract** / **Unzip** karein.
+   - Verify karein ki `htdocs/index.html` seedhe htdocs me dikh raha hai.
+
+8. Apni website open karein:
+   https://anupfabrication.infinityfreeapp.com/
+   Website turant live open ho jayegi!
+========================================================================

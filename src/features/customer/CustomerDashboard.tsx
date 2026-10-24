@@ -3,6 +3,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { useAppStore } from '../../lib/store';
 import { QuotationItem } from '../../types';
 import { QuotationViewer } from '../quotations/QuotationViewer';
+import { OrderStatusTracker } from './OrderStatusTracker';
 import { 
   FileText, 
   Clock, 
@@ -14,7 +15,9 @@ import {
   CheckCircle2, 
   AlertCircle,
   ShieldCheck,
-  User
+  User,
+  Activity,
+  Wrench
 } from 'lucide-react';
 
 interface CustomerDashboardProps {
@@ -23,12 +26,13 @@ interface CustomerDashboardProps {
 
 export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ onOpenNewQuote }) => {
   const { t, language, setLanguage } = useLanguage();
-  const { currentUser, enquiries, quotations, bookings, payments, updateBusinessSettings } = useAppStore();
+  const { currentUser, enquiries, quotations, bookings, payments, orders, updateBusinessSettings } = useAppStore();
 
-  const [activeTab, setActiveTab] = useState<'enquiries' | 'quotations' | 'bookings' | 'payments' | 'profile'>('enquiries');
+  const [activeTab, setActiveTab] = useState<'tracker' | 'enquiries' | 'quotations' | 'bookings' | 'payments' | 'profile'>('tracker');
   const [selectedQuotation, setSelectedQuotation] = useState<QuotationItem | null>(null);
 
   // Filter records belonging to the current user (or demo records if demo user)
+  const userOrders = orders.filter(o => !currentUser || o.customer_id === currentUser.id || currentUser.role === 'admin');
   const userEnquiries = enquiries.filter(e => !currentUser || e.customer_id === currentUser.id || !e.customer_id);
   const userQuotations = quotations.filter(q => !currentUser || q.customer_id === currentUser.id);
   const userBookings = bookings.filter(b => !currentUser || b.customer_id === currentUser.id);
@@ -74,6 +78,20 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ onOpenNewQ
 
       {/* Segmented Tab Controls */}
       <div className="flex items-center gap-1 p-1 bg-slate-900/90 border border-slate-800 rounded-lg overflow-x-auto">
+        <button
+          onClick={() => setActiveTab('tracker')}
+          className={`px-4 py-2 text-xs font-semibold rounded transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2 ${
+            activeTab === 'tracker' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <Activity className="w-3.5 h-3.5 text-inherit" />
+          <span>{language === 'hi' ? 'लाइव ऑर्डर ट्रैकर' : 'Live Order Tracker'}</span>
+          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20">
+            {userOrders.length}
+          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+        </button>
+
         <button
           onClick={() => setActiveTab('enquiries')}
           className={`px-4 py-2 text-xs font-semibold rounded transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2 ${
@@ -136,6 +154,11 @@ export const CustomerDashboard: React.FC<CustomerDashboardProps> = ({ onOpenNewQ
           <span>Profile & Language</span>
         </button>
       </div>
+
+      {/* TAB 0: Live Order Status Tracker */}
+      {activeTab === 'tracker' && (
+        <OrderStatusTracker onOpenNewQuote={onOpenNewQuote} />
+      )}
 
       {/* TAB 1: Enquiries */}
       {activeTab === 'enquiries' && (

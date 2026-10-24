@@ -140,6 +140,28 @@
       },
       "required": ["id", "referenceNo", "amountInr", "status"]
     },
+    "FabricationOrder": {
+      "title": "FabricationOrder",
+      "description": "Real-time metal fabrication project order tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderNumber": { "type": "string", "maxLength": 30 },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "projectTitle": { "type": "string", "maxLength": 200 },
+        "serviceCategory": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending_approval", "in_fabrication", "ready_for_delivery", "delivered"] },
+        "currentStageDescription": { "type": "string", "maxLength": 500 },
+        "estimatedDeliveryDate": { "type": "string" },
+        "workshopStation": { "type": "string", "maxLength": 100 },
+        "progressPercent": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "orderNumber", "customerName", "projectTitle", "status"]
+    },
     "TestConnection": {
       "title": "TestConnection",
       "description": "Probe document for checking Firestore connectivity",
@@ -177,6 +199,10 @@
     "/payments/{paymentId}": {
       "schema": "PaymentRecord",
       "description": "Payment records and receipts"
+    },
+    "/orders/{orderId}": {
+      "schema": "FabricationOrder",
+      "description": "Real-time order and fabrication progress tracker"
     },
     "/test/{docId}": {
       "schema": "TestConnection",
