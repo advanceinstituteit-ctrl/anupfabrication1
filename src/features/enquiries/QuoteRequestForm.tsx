@@ -1,8 +1,124 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useAppStore } from '../../lib/store';
 import { ServiceCategory } from '../../types';
-import { CheckCircle2, Upload, FileText, ArrowRight, ArrowLeft, AlertCircle } from 'lucide-react';
+import { 
+  CheckCircle2, 
+  Upload, 
+  FileText, 
+  ArrowRight, 
+  ArrowLeft, 
+  AlertCircle,
+  Search,
+  Sparkles,
+  Wrench,
+  ChevronDown,
+  Layers,
+  X
+} from 'lucide-react';
+
+interface ProductOption {
+  id: string;
+  category: ServiceCategory;
+  nameEn: string;
+  nameHi: string;
+  suggestedTitle: string;
+  descriptionEn: string;
+  descriptionHi: string;
+}
+
+const POPULAR_PRODUCTS: ProductOption[] = [
+  {
+    id: 'prod-gate-slide',
+    category: 'gates_grills',
+    nameEn: 'Sliding Main Entrance Gate (Motorized / Manual)',
+    nameHi: 'स्लाइडिंग मेन गेट (मोटराइज्ड / मैनुअल)',
+    suggestedTitle: 'Heavy Duty MS Sliding Main Entrance Gate',
+    descriptionEn: 'Custom heavy iron sliding gate with bottom bearing roller track and anti-rust epoxy primer.',
+    descriptionHi: 'नीचे हैवी रोलर बेयरिंग ट्रैक और एंटी-रस्ट कोटिंग युक्त स्लाइडिंग मेन गेट।'
+  },
+  {
+    id: 'prod-gate-swing',
+    category: 'gates_grills',
+    nameEn: 'Wrought Iron Designer Double Swing Gate',
+    nameHi: 'रॉट आयरन डिजाइनर डबल स्विंग गेट',
+    suggestedTitle: 'Ornamental Wrought Iron Double Swing Gate',
+    descriptionEn: 'Double leaf swing gate with decorative forging, spearheads, and heavy pivot hinges.',
+    descriptionHi: 'डिजाइनर नक्काशी व मजबूत कब्जों वाला डबल पल्ले का मेन गेट।'
+  },
+  {
+    id: 'prod-railing-ss',
+    category: 'gates_grills',
+    nameEn: 'Grade 304 Stainless Steel Balcony & Stair Railing',
+    nameHi: 'ग्रेड 304 स्टेनलेस स्टील बालकनी व सीढ़ी रेलिंग',
+    suggestedTitle: 'SS 304 Balcony & Staircase Railing with Toughened Glass',
+    descriptionEn: 'Rust-proof high gloss or satin finished stainless steel railings for residences & offices.',
+    descriptionHi: 'जंग-रहित उच्च कोटि की स्टेनलेस स्टील रेलिंग बालकनी एवं सीढ़ियों हेतु।'
+  },
+  {
+    id: 'prod-laser-grill',
+    category: 'gates_grills',
+    nameEn: 'CNC Laser-Cut Modern Window Grills',
+    nameHi: 'सीएनसी लेजर कट मॉडर्न खिड़की ग्रिल',
+    suggestedTitle: 'Laser Cut Sheet Metal Security Window Grills',
+    descriptionEn: 'Precision laser-cut geometric or floral safety grills in 2.5mm - 4mm MS sheet.',
+    descriptionHi: '2.5mm से 4mm शीट में कंप्यूटर लेजर कटिंग युक्त आकर्षक सुरक्षा ग्रिल।'
+  },
+  {
+    id: 'prod-shed-warehouse',
+    category: 'structural_steel',
+    nameEn: 'Industrial Factory / Warehouse Shed',
+    nameHi: 'इंडस्ट्रियल फैक्ट्री / वेयरहाउस शेड',
+    suggestedTitle: 'Tubular Roof Truss & Structural Steel Warehouse Shed',
+    descriptionEn: 'Large span tubular or I-beam roof trusses with color-coated GI profile roofing.',
+    descriptionHi: 'बड़े स्पैन वाले पाइप व आई-बीम ट्रस शेड रंगीन प्रोफाइल शीट छत के साथ।'
+  },
+  {
+    id: 'prod-peb-frame',
+    category: 'structural_steel',
+    nameEn: 'PEB Columns, Heavy I-Beams & Trusses',
+    nameHi: 'PEB कॉलम, हैवी आई-बीम व ट्रस स्ट्रक्चर',
+    suggestedTitle: 'Heavy Structural Steel PEB Columns and Wind Bracing',
+    descriptionEn: 'Heavy duty load-bearing structural fabrication for industrial premises.',
+    descriptionHi: 'फैक्ट्री व गोदाम हेतु वजन वहन क्षमता युक्त हैवी स्ट्रक्चरल कॉलम व बीम।'
+  },
+  {
+    id: 'prod-mezzanine',
+    category: 'frames_trusses',
+    nameEn: 'Industrial Mezzanine Floor & Storage Platform',
+    nameHi: 'इंडस्ट्रियल मेजेनाइन फ्लोर व स्टोरेज प्लेटफॉर्म',
+    suggestedTitle: 'Heavy Duty Warehouse Storage Mezzanine Floor Structure',
+    descriptionEn: 'Modular high load-bearing mezzanine floor with safety handrails and steel staircase.',
+    descriptionHi: 'वेयरहाउस में अतिरिक्त जगह हेतु मजबूत लोहे का मेजेनाइन फ्लोर व रेलिंग।'
+  },
+  {
+    id: 'prod-staircase',
+    category: 'frames_trusses',
+    nameEn: 'Metal Spiral & Stringer Staircase',
+    nameHi: 'लोहे की सीढ़ियां एवं स्पाइरल स्टेप्स',
+    suggestedTitle: 'Heavy MS Channel Stringer Staircase with Checker Plate Steps',
+    descriptionEn: 'Industrial and commercial fire escape and internal access staircases.',
+    descriptionHi: 'चेकर्ड प्लेट स्टेप्स युक्त इंडस्ट्रियल व रेजिडेंशियल लोहे की सीढ़ियां।'
+  },
+  {
+    id: 'prod-welding-job',
+    category: 'welding_joining',
+    nameEn: 'Precision MIG / TIG Welding Job Work',
+    nameHi: 'प्रिसिजन मिग / टिग वेल्डिंग जॉब वर्क',
+    suggestedTitle: 'On-Site / Workshop High-Strength Welding & Metal Joining',
+    descriptionEn: 'Clean uniform penetration welding for carbon steel, stainless steel, and GI.',
+    descriptionHi: 'कार्बन स्टील, एसएस और जीआई हेतु कुशल मिग व टिग वेल्डिंग सेवाएं।'
+  },
+  {
+    id: 'prod-repair-site',
+    category: 'repair_modification',
+    nameEn: 'On-Site Repair & Structure Reinforcement',
+    nameHi: 'साइट पर रिपेयर एवं स्ट्रक्चर मजबूती कार्य',
+    suggestedTitle: 'On-Site Structural Repair, Rust Cutting & Beam Strengthening',
+    descriptionEn: 'Emergency structural welding, rusted section replacement, and hinge realignment.',
+    descriptionHi: 'आपातकालीन वेल्डिंग, जंग लगे हिस्से हटाकर नई प्लेटिंग व स्ट्रक्चर मजबूती।'
+  }
+];
 
 interface QuoteRequestFormProps {
   onSuccess?: (refNo: string) => void;
@@ -17,6 +133,11 @@ export const QuoteRequestForm: React.FC<QuoteRequestFormProps> = ({ onSuccess, p
   const [submitting, setSubmitting] = useState(false);
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // Search & Custom states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string>('');
 
   // Form states
   const [customerName, setCustomerName] = useState(currentUser?.full_name || '');
@@ -178,54 +299,225 @@ export const QuoteRequestForm: React.FC<QuoteRequestFormProps> = ({ onSuccess, p
           </div>
         )}
 
-        {/* STEP 1: Service Category & Title */}
+        {/* STEP 1: Search, Dropdown & Custom Product Selector */}
         {step === 1 && (
           <div className="space-y-6">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                {t('field_service')} *
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {services.map((srv) => (
+            {/* Top Toolbar: Search Bar + Custom Product Button */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <Layers className="w-4 h-4 text-amber-400" />
+                  <span>{language === 'hi' ? 'उत्पाद / सेवा का चयन करें' : 'Select Product or Service'} *</span>
+                </label>
+
+                {/* Custom Product Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCustomMode(true);
+                    setSelectedProductId('custom');
+                    setServiceCategory('custom_metal');
+                    setProjectTitle('');
+                    setSearchQuery('');
+                  }}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer border ${
+                    isCustomMode
+                      ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30'
+                      : 'bg-slate-950 border-amber-500/50 hover:bg-amber-500/10 text-amber-300'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{language === 'hi' ? '✨ आवश्यकता अनुसार कस्टम उत्पाद' : '✨ Custom Requirement / Other'}</span>
+                </button>
+              </div>
+
+              {/* Quick Search Input */}
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (isCustomMode && e.target.value) {
+                      setIsCustomMode(false);
+                    }
+                  }}
+                  placeholder={language === 'hi' 
+                    ? 'उत्पाद खोजें (जैसे: गेट, शेड, रेलिंग, सीढ़ी, ग्रिल, मेजेनाइन)...' 
+                    : 'Search fabrication products (e.g., Gate, Shed, Railing, Staircase, Grill, Mezzanine)...'}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-9 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                />
+                {searchQuery && (
                   <button
-                    key={srv.id}
                     type="button"
-                    onClick={() => setServiceCategory(srv.category)}
-                    className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer ${
-                      serviceCategory === srv.category
-                        ? 'bg-amber-500/10 border-amber-500 text-white'
-                        : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700'
-                    }`}
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-white p-0.5"
                   >
-                    <div className="text-sm font-bold text-slate-100">
-                      {language === 'hi' ? srv.name_hi : srv.name_en}
-                    </div>
-                    <div className="text-xs text-slate-400 mt-1 line-clamp-2">
-                      {language === 'hi' ? srv.description_hi : srv.description_en}
-                    </div>
+                    <X className="w-4 h-4" />
                   </button>
-                ))}
+                )}
+              </div>
+
+              {/* Dropdown Menu (Select Pick List) */}
+              <div>
+                <label className="block text-[11px] font-mono uppercase text-slate-400 mb-1">
+                  {language === 'hi' ? 'या ड्रॉपडाउन मेनू से चुनें:' : 'Or Select From Dropdown Menu:'}
+                </label>
+                <div className="relative">
+                  <select
+                    value={isCustomMode ? 'custom' : selectedProductId}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === 'custom') {
+                        setIsCustomMode(true);
+                        setSelectedProductId('custom');
+                        setServiceCategory('custom_metal');
+                        setProjectTitle('');
+                      } else {
+                        const found = POPULAR_PRODUCTS.find(p => p.id === val);
+                        if (found) {
+                          setIsCustomMode(false);
+                          setSelectedProductId(found.id);
+                          setServiceCategory(found.category);
+                          setProjectTitle(found.suggestedTitle);
+                        }
+                      }
+                    }}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none font-medium cursor-pointer"
+                  >
+                    <option value="" disabled>-- {language === 'hi' ? 'उत्पाद चुनें' : 'Choose a Fabrication Product'} --</option>
+                    
+                    <optgroup label="Gates, Grills & Railings (गेट एवं रेलिंग)">
+                      <option value="prod-gate-slide">Sliding Main Entrance Gate (स्लाइडिंग मेन गेट)</option>
+                      <option value="prod-gate-swing">Wrought Iron Designer Swing Gate (रॉट आयरन स्विंग गेट)</option>
+                      <option value="prod-railing-ss">Grade 304 Stainless Steel Railing (एसएस 304 रेलिंग)</option>
+                      <option value="prod-laser-grill">CNC Laser-Cut Modern Window Grills (लेजर कट खिड़की ग्रिल)</option>
+                    </optgroup>
+
+                    <optgroup label="Structural Steel & Sheds (स्ट्रक्चरल शेड एवं कॉलम)">
+                      <option value="prod-shed-warehouse">Industrial Factory / Warehouse Shed (फैक्ट्री शेड)</option>
+                      <option value="prod-peb-frame">PEB Columns, Heavy I-Beams & Trusses (PEB स्ट्रक्चर)</option>
+                    </optgroup>
+
+                    <optgroup label="Frames, Mezzanines & Staircases (मेजेनाइन व सीढ़ियां)">
+                      <option value="prod-mezzanine">Industrial Mezzanine Floor & Platform (मेजेनाइन फ्लोर)</option>
+                      <option value="prod-staircase">Metal Spiral & Stringer Staircase (लोहे की सीढ़ियां)</option>
+                    </optgroup>
+
+                    <optgroup label="Welding & Site Repair (वेल्डिंग व रिपेयर)">
+                      <option value="prod-welding-job">Precision MIG / TIG Welding Job Work (मिग/टिग वेल्डिंग)</option>
+                      <option value="prod-repair-site">On-Site Repair & Structure Reinforcement (साइट रिपेयर कार्य)</option>
+                    </optgroup>
+
+                    <optgroup label="Custom Engineering (कस्टम)">
+                      <option value="custom">✨ {language === 'hi' ? 'अपनी आवश्यकता अनुसार कस्टम उत्पाद' : 'Custom Product / Fabricate from Drawing'}</option>
+                    </optgroup>
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" />
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                {t('field_project_title')} *
-              </label>
-              <input
-                type="text"
-                value={projectTitle}
-                onChange={(e) => setProjectTitle(e.target.value)}
-                placeholder="e.g. 14ft Main Entrance Gate with Laser-cut pattern, or Industrial Factory Shed"
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
-              />
-            </div>
+            {/* Custom Mode Active Box */}
+            {isCustomMode ? (
+              <div className="bg-amber-500/10 border border-amber-500/40 rounded-xl p-5 space-y-3">
+                <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span>{language === 'hi' ? 'कस्टम फैब्रिकेशन मोड सक्रिय है' : 'Custom Fabrication Mode Selected'}</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  {language === 'hi' 
+                    ? 'नीचे अपने प्रोजेक्ट का नाम या विवरण लिखें। अगले स्टेप में आप आर्किटेक्ट ड्राइंग, ब्लू-प्रिंट या फोटो भी अपलोड कर सकते हैं।' 
+                    : 'Enter your custom fabrication requirement below. In the next steps, you can specify exact dimensions, material preferences (MS, SS, GI), and upload architectural blueprints or reference drawings.'}
+                </p>
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-200 mb-1.5">
+                    {language === 'hi' ? 'कस्टम प्रोजेक्ट का नाम / शीर्षक' : 'Custom Project Title / Requirement'} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={projectTitle}
+                    onChange={(e) => setProjectTitle(e.target.value)}
+                    placeholder={language === 'hi' ? 'उदा. विशेष आकार का बालकनी शेड, मशीन सपोर्ट फ्रेम या शोरूम डिस्प्ले' : 'e.g. Custom curved cantilever roof, machine base skid frame, or showroom structure'}
+                    className="w-full bg-slate-950 border border-amber-500/50 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+              </div>
+            ) : (
+              /* Product Search Results Cards */
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs text-slate-400 font-mono">
+                  <span>
+                    {searchQuery 
+                      ? `${POPULAR_PRODUCTS.filter(p => p.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) || p.nameHi.toLowerCase().includes(searchQuery.toLowerCase())).length} ${language === 'hi' ? 'उत्पाद मिले' : 'products found'}`
+                      : (language === 'hi' ? 'लोकप्रिय फैब्रिकेशन उत्पाद' : 'Popular Fabrication Products')}
+                  </span>
+                  <span>{language === 'hi' ? 'क्लिक करके चुनें' : 'Click to select'}</span>
+                </div>
 
-            <div className="pt-4 flex justify-end">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                  {POPULAR_PRODUCTS
+                    .filter(p => {
+                      if (!searchQuery.trim()) return true;
+                      const q = searchQuery.toLowerCase();
+                      return p.nameEn.toLowerCase().includes(q) || 
+                             p.nameHi.toLowerCase().includes(q) ||
+                             p.suggestedTitle.toLowerCase().includes(q) ||
+                             p.descriptionEn.toLowerCase().includes(q);
+                    })
+                    .map((prod) => (
+                      <button
+                        key={prod.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedProductId(prod.id);
+                          setIsCustomMode(false);
+                          setServiceCategory(prod.category);
+                          setProjectTitle(prod.suggestedTitle);
+                        }}
+                        className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
+                          selectedProductId === prod.id
+                            ? 'bg-amber-500/15 border-amber-500 text-white shadow-sm shadow-amber-500/20'
+                            : 'bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="text-xs sm:text-sm font-bold text-slate-100 flex items-center justify-between">
+                          <span>{language === 'hi' ? prod.nameHi : prod.nameEn}</span>
+                          {selectedProductId === prod.id && (
+                            <span className="text-amber-400 font-bold text-xs">✓</span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                          {language === 'hi' ? prod.descriptionHi : prod.descriptionEn}
+                        </div>
+                      </button>
+                    ))}
+                </div>
+
+                {/* Project Title Input for chosen standard item */}
+                <div className="pt-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                    {t('field_project_title')} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={projectTitle}
+                    onChange={(e) => setProjectTitle(e.target.value)}
+                    placeholder="e.g. 14ft Main Entrance Gate with Laser-cut pattern, or Industrial Factory Shed"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="pt-4 flex justify-end border-t border-slate-800">
               <button
                 type="button"
                 onClick={handleNextStep1}
-                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-md shadow-amber-500/20"
               >
                 <span>Continue to Dimensions</span>
                 <ArrowRight className="w-4 h-4" />
