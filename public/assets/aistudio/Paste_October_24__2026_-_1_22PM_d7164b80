@@ -1,0 +1,1396 @@
+# ANUP FABRICATION — COMPLETE FULL-STACK WEBSITE DEVELOPMENT PROMPT
+
+## 1. ROLE AND OBJECTIVE
+
+Act as a senior full-stack web developer, software architect, UI/UX designer, Supabase database engineer, cybersecurity specialist, and payment integration engineer with 20+ years of professional experience.
+
+Build a complete, responsive, premium-quality, production-oriented website for **Anup Fabrication** using Google AI Studio.
+
+This must be a functional web application, not merely a static design or frontend prototype.
+
+The application must include a public business website, customer registration and login, online service enquiries, quotation requests, booking management, private file uploads, customer dashboards, an administrator dashboard, Supabase database integration, Razorpay payments, analytics, bilingual support, and an AI customer assistant.
+
+Generate actual working source code, database migrations, backend functions, security policies, testing instructions, and deployment documentation.
+
+Do not claim that any external service is connected, configured, or tested until it has actually been verified.
+
+---
+
+## 2. OFFICIAL BUSINESS INFORMATION
+
+Use the following details consistently throughout the website.
+
+Business name: Anup Fabrication
+
+Website URL: https://anupfabrication.infinityfree.me
+
+Business address: 31/1 Nangli Sakrawati, Najafgarh, New Delhi, Delhi 110043, India
+
+Contact numbers:
+- 7217853257
+- 7838640423
+
+Target customers: Residential, commercial, and industrial customers in Delhi NCR, subject to the actual service area configured by the administrator.
+
+Default currency: INR (Indian Rupees, ₹).
+
+Supported languages:
+- English
+- Hindi
+
+Frontend hosting: InfinityFree.
+
+Backend: Supabase.
+
+Database: Supabase PostgreSQL.
+
+Authentication: Supabase Auth.
+
+File storage: Supabase Storage.
+
+Server-side business logic: Supabase Edge Functions.
+
+Payment gateway: Razorpay.
+
+AI provider: Gemini API, accessed through a secure server-side function.
+
+The business website domain has been selected as `anupfabrication.infinityfree.me`. Treat it as the intended deployment URL, but verify that the subdomain has been registered and activated before claiming the website is live.
+
+Do not invent GST numbers, certifications, customer reviews, project statistics, prices, business history, operating hours, or other unverified company claims.
+
+Make all editable business information configurable through the administrator dashboard where practical.
+
+---
+
+## 3. BUSINESS PURPOSE
+
+The website should help Anup Fabrication:
+
+1. Present its fabrication services professionally.
+2. Generate enquiries and qualified leads.
+3. Allow customers to request quotations online.
+4. Allow customers to upload project drawings, images, and reference documents.
+5. Accept booking requests for fabrication services.
+6. Allow administrators to review requests and confirm bookings.
+7. Generate quotations and track customer acceptance.
+8. Collect advance or full payments through Razorpay.
+9. Manage customers, services, projects, enquiries, quotations, and bookings.
+10. Display useful reports and business analytics.
+11. Provide an AI assistant for common customer questions.
+12. Support both English and Hindi.
+13. Offer a professional experience on mobile, tablet, and desktop.
+
+The business operates primarily through custom fabrication work. Therefore, quotation-based pricing must be supported.
+
+Do not automatically confirm bookings until the administrator has approved availability and any required quotation or payment conditions have been satisfied.
+
+---
+
+## 4. TECHNOLOGY ARCHITECTURE
+
+Use a maintainable architecture compatible with the current Google AI Studio development environment.
+
+### Frontend
+
+Preferred technologies:
+- React.
+- TypeScript.
+- Vite, if appropriate for the selected project setup.
+- A reusable component architecture.
+- Modern CSS or a compatible styling framework.
+- A lightweight animation library if needed.
+- A maintained localization solution or structured translation dictionaries.
+- Supabase JavaScript client.
+- A maintained validation library.
+
+Use the framework and dependencies actually supported by the generated project. Do not introduce unnecessary dependencies.
+
+### Backend
+
+Use Supabase for:
+- PostgreSQL database.
+- Supabase Auth.
+- Row Level Security.
+- Private and public storage buckets.
+- Database migrations.
+- Edge Functions.
+- Trusted payment processing.
+- AI API calls.
+- Protected reporting operations.
+
+### Hosting compatibility
+
+The final frontend must be deployable to InfinityFree's website hosting environment.
+
+Build the application so that the production frontend can be exported as static HTML, CSS, JavaScript, and assets.
+
+Do not require a permanently running Node.js server on InfinityFree.
+
+Move protected server-side operations into Supabase Edge Functions.
+
+Generate a production build that can be uploaded into the correct `htdocs` directory through the hosting file manager or FTP.
+
+If InfinityFree's current capabilities prevent a specific feature from working, explain the limitation and implement the feature through Supabase or another suitable external service.
+
+Do not deploy private backend logic or secrets to the static frontend.
+
+### Required project structure
+
+Use a clear, modular structure such as:
+
+- `src/components/`
+- `src/pages/`
+- `src/layouts/`
+- `src/features/auth/`
+- `src/features/services/`
+- `src/features/projects/`
+- `src/features/enquiries/`
+- `src/features/quotations/`
+- `src/features/bookings/`
+- `src/features/payments/`
+- `src/features/admin/`
+- `src/features/analytics/`
+- `src/features/ai/`
+- `src/i18n/`
+- `src/lib/supabase/`
+- `src/lib/validation/`
+- `src/types/`
+- `supabase/migrations/`
+- `supabase/functions/`
+- `tests/`
+- `README.md`
+- `.env.example`
+
+Adapt this structure as necessary without putting the entire application into one giant component.
+
+---
+
+## 5. PREMIUM DESIGN AND BRAND IDENTITY
+
+Design Anup Fabrication as a premium, modern, trustworthy industrial services brand.
+
+### Design style
+
+Use:
+- Deep charcoal or navy.
+- White and light neutral backgrounds.
+- Carefully selected orange or steel-blue accents.
+- Strong, readable typography.
+- Professional industrial imagery.
+- Clear visual hierarchy.
+- Consistent spacing.
+- Elegant cards and structured layouts.
+- Subtle shadows and refined borders.
+- Smooth transitions and restrained animations.
+
+The design should look like a professionally designed fabrication company website, not a generic template.
+
+Avoid:
+- Excessive gradients.
+- Overloaded layouts.
+- Unnecessary animations.
+- Fake customer testimonials.
+- Fabricated statistics.
+- Excessive decorative elements.
+- Poorly aligned components.
+- Tiny text on mobile.
+
+Use appropriate licensed placeholder images until genuine business photos are provided. Keep images replaceable through the admin interface.
+
+Create a simple text-based Anup Fabrication logo if an official logo is not provided. Do not invent an existing official logo.
+
+### Animations
+
+Add:
+- Smooth page transitions where appropriate.
+- Subtle entrance animations.
+- Button hover effects.
+- Gentle card animations.
+- Animated counters backed by real database values.
+- Loading skeletons.
+- Smooth mobile navigation.
+
+Respect reduced-motion preferences and avoid animation that interferes with usability.
+
+### Responsive requirements
+
+The website must work on:
+- Desktop computers.
+- Laptops.
+- Tablets.
+- Android phones.
+- iPhones.
+
+Use mobile-first layouts, touch-friendly controls, responsive navigation, accessible forms, optimized images, and readable typography.
+
+---
+
+## 6. PUBLIC WEBSITE PAGES
+
+### A. Homepage
+
+Build a polished homepage containing:
+
+1. Header with Anup Fabrication branding.
+2. English/Hindi language switcher.
+3. Main navigation.
+4. Hero section with a professional fabrication-services headline.
+5. Short business introduction.
+6. Primary CTA: Request a Quote.
+7. Secondary CTA: Explore Services.
+8. Services overview.
+9. Featured projects gallery.
+10. How the process works.
+11. Reasons to contact Anup Fabrication, using verified claims only.
+12. Customer enquiry section.
+13. Contact details.
+14. Location and directions link.
+15. Footer with contact information, policies, and navigation.
+16. Optional WhatsApp contact button using an administrator-configured WhatsApp number.
+
+Use real content and useful navigation. Do not create buttons that do nothing.
+
+### B. About Us
+
+Include:
+- Business overview.
+- Fabrication capabilities.
+- Working process.
+- Service philosophy.
+- Customer enquiry CTA.
+
+Make the content editable by the administrator.
+
+Do not invent the company's founding date, years of experience, certifications, or history.
+
+### C. Services
+
+Create a dynamic services catalog connected to Supabase.
+
+Suggested initial categories, subject to administrator approval:
+- Custom metal fabrication.
+- Welding and metal joining.
+- Gates, grills, and railings.
+- Metal frames.
+- Structural fabrication.
+- Repair and modification.
+- Custom fabrication from drawings.
+
+Each service should support:
+- English name.
+- Hindi name.
+- English description.
+- Hindi description.
+- Category.
+- Images.
+- Optional administrator-configured starting price.
+- Optional estimated lead time.
+- Active or inactive status.
+- Display order.
+- Request Quote button.
+
+Do not publish proposed services until the administrator approves them.
+
+### D. Projects and Gallery
+
+Build a portfolio of approved projects.
+
+Include:
+- Project title.
+- English and Hindi descriptions.
+- Category.
+- Cover image.
+- Optional image gallery.
+- Publication status.
+
+Use Supabase Storage for images.
+
+Only show published projects to public visitors.
+
+Private customer documents must never appear in the public gallery.
+
+### E. Request a Quote
+
+Create a polished multi-step quotation form.
+
+Collect:
+- Customer name.
+- Phone number.
+- Email address where appropriate.
+- Service category.
+- Project title.
+- Project description.
+- Approximate dimensions, if applicable.
+- Quantity.
+- Preferred date.
+- Site or delivery address.
+- Budget range, optional.
+- Reference drawings or images.
+- Additional requirements.
+- Preferred language.
+- Preferred contact method.
+- Privacy consent.
+
+Validate all fields on the client and server.
+
+Generate a unique enquiry reference number after successful submission.
+
+Prevent accidental duplicate submissions.
+
+Allow a public visitor to submit a limited enquiry without creating an account, subject to server-side spam protection.
+
+Allow authenticated customers to associate enquiries with their account.
+
+Show a clear confirmation message after submission.
+
+### F. Contact Us
+
+Display:
+- Anup Fabrication.
+- 31/1 Nangli Sakrawati, Najafgarh, New Delhi, Delhi 110043.
+- 7217853257.
+- 7838640423.
+- Contact form.
+- Click-to-call links.
+- Directions link.
+- Optional map embed.
+
+Do not display unverified opening hours.
+
+Provide spam protection and server-side validation for contact forms.
+
+### G. Authentication
+
+Implement:
+- Customer registration.
+- Login.
+- Logout.
+- Forgot password.
+- Password reset.
+- Session persistence.
+- Email verification when configured.
+- Protected routes.
+- Authentication error messages.
+
+Support English and Hindi throughout.
+
+Never allow public registration to grant administrator privileges.
+
+### H. Customer Dashboard
+
+Allow authenticated customers to:
+- View their profile.
+- Update permitted profile fields.
+- View their own enquiries.
+- Submit additional enquiries.
+- View quotation details.
+- Accept or reject quotations.
+- View booking requests and statuses.
+- View verified payment statuses.
+- Download authorized receipts.
+- Upload additional documents.
+- View notifications.
+- Update language preferences.
+
+Customers must only access records they are authorized to see.
+
+---
+
+## 7. ADMINISTRATOR DASHBOARD
+
+Create a separate, secure administration interface.
+
+### Dashboard overview
+
+Show real database-backed metrics:
+- Total enquiries.
+- New enquiries.
+- Pending quotations.
+- Accepted quotations.
+- Requested bookings.
+- Confirmed bookings.
+- Completed projects.
+- Successful payments.
+- Verified payment revenue.
+- Monthly enquiry trends.
+- Monthly payment trends.
+
+Never hardcode random statistics.
+
+### Enquiry management
+
+Administrators should be able to:
+- Search enquiries.
+- Filter by date, status, service, and customer.
+- View enquiry details.
+- Access authorized uploaded files.
+- Add internal notes.
+- Assign enquiries if staff management is enabled.
+- Update enquiry status.
+- Convert enquiries into quotations.
+- Convert accepted requests into bookings.
+- Record follow-up actions.
+
+### Quotation management
+
+Administrators should be able to:
+- Create quotations.
+- Add line items.
+- Edit descriptions and quantities.
+- Set unit prices.
+- Configure discounts and applicable taxes.
+- Set quotation expiry.
+- Set advance payment requirements.
+- Publish quotations for customer review.
+- Track acceptance and rejection.
+- Generate a printable quotation or PDF.
+
+Calculate totals using trusted server-side logic or database logic.
+
+Never trust totals calculated only in the browser.
+
+Use configurable tax rules. Do not assume a particular GST registration or tax treatment.
+
+### Booking management
+
+Support the following statuses:
+- Requested.
+- Under review.
+- Quotation sent.
+- Awaiting payment.
+- Confirmed.
+- In progress.
+- Completed.
+- Cancelled.
+
+Allow administrators to:
+- Review booking requests.
+- Set available dates.
+- Confirm or reschedule appointments.
+- Update booking status.
+- Add internal notes.
+- Notify customers.
+
+Prevent double-booking when a configured appointment slot system is used.
+
+### Customer management
+
+Allow administrators to:
+- Search customers.
+- View authorized customer records.
+- Review enquiry history.
+- Review quotation and booking history.
+- View verified payments.
+- Manage customer communication preferences.
+
+### Content management
+
+Allow administrators to manage:
+- Services.
+- Service images.
+- Projects and gallery.
+- Public website content.
+- Business contact details.
+- Operating hours.
+- Service areas.
+- Approved homepage content.
+- English and Hindi translations.
+
+### Reports
+
+Include:
+- Enquiries by date.
+- Enquiries by service.
+- Quotation acceptance rate.
+- Booking status distribution.
+- Verified payment totals.
+- Monthly revenue.
+- Customer activity.
+
+Add date filters and CSV exports for authorized administrators.
+
+Protect customer information in all reports.
+
+### Audit logging
+
+Record important administrative actions, such as:
+- Creating or updating a quotation.
+- Changing booking status.
+- Publishing a service.
+- Updating public business settings.
+- Processing an authorized refund action.
+
+Do not allow ordinary customers to edit audit records.
+
+---
+
+## 8. SUPABASE SETUP AND DATABASE
+
+Create a new Supabase project.
+
+Generate complete, executable SQL migration files.
+
+Use:
+- UUID primary keys.
+- Foreign keys.
+- Check constraints.
+- Unique constraints where appropriate.
+- Useful indexes.
+- Timestamps.
+- Appropriate delete behavior.
+- Updated-at triggers where needed.
+- Explicit authorization policies.
+
+Create at least the following tables.
+
+### profiles
+
+Fields:
+- `id`, referencing `auth.users`.
+- `full_name`.
+- `phone`.
+- `preferred_language`.
+- `created_at`.
+- `updated_at`.
+
+### user_roles
+
+Fields:
+- `id`.
+- `user_id`.
+- `role`.
+- `created_at`.
+
+Supported roles may include customer, staff, and admin.
+
+Use a secure role-management process. Customers must never be able to assign their own roles.
+
+### services
+
+Fields:
+- `id`.
+- `name_en`.
+- `name_hi`.
+- `description_en`.
+- `description_hi`.
+- `category`.
+- `starting_price`, optional.
+- `estimated_lead_time`, optional.
+- `is_active`.
+- `display_order`.
+- `created_at`.
+- `updated_at`.
+
+### projects
+
+Fields:
+- `id`.
+- `title_en`.
+- `title_hi`.
+- `description_en`.
+- `description_hi`.
+- `category`.
+- `cover_image_path`.
+- `publication_status`.
+- `created_at`.
+- `updated_at`.
+
+### enquiries
+
+Fields:
+- `id`.
+- `customer_id`, nullable for permitted public submissions.
+- `customer_name`.
+- `phone`.
+- `email`.
+- `service_id`.
+- `project_description`.
+- `dimensions`.
+- `quantity`.
+- `budget_range`.
+- `preferred_date`.
+- `location`.
+- `preferred_language`.
+- `status`.
+- `reference_number`.
+- `assigned_to`, optional.
+- `created_at`.
+- `updated_at`.
+
+### enquiry_files
+
+Fields:
+- `id`.
+- `enquiry_id`.
+- `storage_path`.
+- `original_filename`.
+- `content_type`.
+- `file_size`.
+- `uploaded_by`.
+- `created_at`.
+
+### quotations
+
+Fields:
+- `id`.
+- `enquiry_id`.
+- `customer_id`.
+- `quotation_number`.
+- `subtotal`.
+- `tax_amount`.
+- `discount_amount`.
+- `total_amount`.
+- `advance_amount`.
+- `currency`.
+- `valid_until`.
+- `status`.
+- `created_by`.
+- `created_at`.
+- `updated_at`.
+
+### quotation_items
+
+Fields:
+- `id`.
+- `quotation_id`.
+- `description`.
+- `quantity`.
+- `unit_price`.
+- `line_total`.
+
+### bookings
+
+Fields:
+- `id`.
+- `customer_id`.
+- `enquiry_id`.
+- `quotation_id`, optional.
+- `requested_date`.
+- `confirmed_date`, optional.
+- `status`.
+- `customer_notes`.
+- `internal_notes`.
+- `created_at`.
+- `updated_at`.
+
+Keep internal notes inaccessible to customers.
+
+### payments
+
+Fields:
+- `id`.
+- `customer_id`.
+- `quotation_id`.
+- `booking_id`, optional.
+- `provider`.
+- `provider_order_id`.
+- `provider_payment_id`.
+- `amount_paise`.
+- `currency`.
+- `status`.
+- `verified_at`.
+- `created_at`.
+- `updated_at`.
+
+Store amounts as integer paise for Razorpay transactions.
+
+Use appropriate unique constraints and idempotency controls for payment identifiers.
+
+### notifications
+
+Fields:
+- `id`.
+- `user_id`.
+- `title`.
+- `message`.
+- `read_at`.
+- `created_at`.
+
+### audit_logs
+
+Fields:
+- `id`.
+- `actor_user_id`.
+- `action`.
+- `entity_type`.
+- `entity_id`.
+- Safe metadata.
+- `created_at`.
+
+### business_settings
+
+Store public and administrator-editable business settings, including:
+- Business name.
+- Address.
+- Contact numbers.
+- Operating hours.
+- Service areas.
+- Approved public content.
+- Business preferences.
+
+Do not expose private configuration or secrets through public settings.
+
+Add supporting tables for quotation history, appointment availability, staff assignments, or AI conversation records if needed.
+
+### SQL deliverables
+
+Create:
+1. Ordered migrations.
+2. Table creation.
+3. Constraints and indexes.
+4. Triggers and secure database functions.
+5. RLS policies.
+6. Storage bucket setup.
+7. Safe service-category seed data.
+8. Administrator bootstrap instructions.
+9. Migration execution instructions.
+10. Recovery and backup guidance.
+
+Never insert a production administrator with a hardcoded password.
+
+Do not create public policies that allow unrestricted reads or writes to private business data.
+
+---
+
+## 9. AUTHENTICATION AND ROW LEVEL SECURITY
+
+Enable RLS on all tables exposed through Supabase APIs.
+
+Implement and test these rules:
+
+- Customers can access only their permitted profile fields.
+- Customers can access only their own enquiries.
+- Customers can access only their own quotations and bookings.
+- Customers can view only their own payment records.
+- Customers can access only their own notifications and authorized documents.
+- Public visitors can read only published services and projects.
+- Public visitors can read only explicitly public business settings.
+- Public enquiry submission must be validated and rate-limited.
+- Only authorized administrators can manage services and public content.
+- Only authorized administrators can create and publish quotations.
+- Only trusted server-side logic can mark payments as successful.
+- Customers cannot edit internal notes, privileged roles, payment status, or quotation totals.
+- Audit logs cannot be edited by ordinary users.
+- Staff access must be restricted according to assigned permissions.
+
+Use secure role-checking functions with carefully controlled execution privileges.
+
+Avoid recursive RLS policies.
+
+Never trust an authorization decision, role, ownership identifier, or payment status provided by the frontend.
+
+Create tests demonstrating both permitted and denied access.
+
+---
+
+## 10. SUPABASE STORAGE AND FILE UPLOADS
+
+Create suitable storage buckets.
+
+Suggested buckets:
+- `project-gallery`.
+- `service-images`.
+- `enquiry-files`.
+- `profile-images`, if needed.
+
+Use public access only for approved gallery and service images.
+
+Keep enquiry drawings, customer documents, and private profile files private.
+
+Implement:
+- File type validation.
+- File size limits.
+- Server-side validation.
+- Safe object paths.
+- Ownership verification.
+- Authenticated access or short-lived signed URLs.
+- Upload progress.
+- Retry handling.
+- Replacement and deletion rules.
+- Clear error messages.
+
+Do not trust filenames or browser-provided MIME types as the only security check.
+
+Prevent users from accessing other customers' files.
+
+Do not expose private files through public gallery URLs.
+
+---
+
+## 11. RAZORPAY PAYMENT INTEGRATION
+
+Implement Razorpay through secure Supabase Edge Functions.
+
+Support payments against approved quotations.
+
+### Required payment flow
+
+1. Customer opens an approved quotation.
+2. Frontend requests payment initiation.
+3. Server verifies customer authorization and retrieves the authoritative amount.
+4. Server creates a Razorpay order.
+5. Razorpay Checkout opens with the appropriate order details.
+6. Customer completes or cancels the payment.
+7. Server verifies the Razorpay payment signature.
+8. Razorpay webhook signature is verified against the raw request body.
+9. The database is updated only after trusted verification.
+10. Customer and administrator can see the verified payment status.
+
+### Security requirements
+
+- Never expose `RAZORPAY_KEY_SECRET`.
+- Never expose `RAZORPAY_WEBHOOK_SECRET`.
+- Never trust a payment-success message from the browser.
+- Validate order amounts on the server.
+- Validate currency and order ownership.
+- Use idempotent payment processing.
+- Handle duplicate webhook deliveries safely.
+- Prevent duplicate successful payment records.
+- Maintain accurate payment status transitions.
+- Record verification timestamps.
+- Keep sensitive payment data out of logs.
+- Do not store card numbers or CVVs.
+
+Support:
+- Pending payments.
+- Successful payments.
+- Failed payments.
+- Refunded payments.
+
+Configure refund operations through an authorized server-side workflow.
+
+Generate setup instructions for Razorpay test mode, credentials, webhook URL, webhook secret, and required webhook events.
+
+Do not activate live payments until the merchant account is configured and all tests pass.
+
+---
+
+## 12. GEMINI AI CUSTOMER ASSISTANT
+
+Add an optional AI assistant powered by Gemini.
+
+All Gemini API calls must go through a secure server-side function.
+
+The assistant should:
+- Answer questions about configured services.
+- Explain how quotations work.
+- Explain the booking process.
+- Help customers prepare enquiries.
+- Answer in English or Hindi.
+- Ask for missing information needed for a quotation.
+- Direct customers to contact the business when an answer is uncertain.
+
+The assistant must not invent:
+- Prices.
+- Delivery dates.
+- Service availability.
+- Company certifications.
+- Customer reviews.
+- Business claims.
+
+The AI must not independently confirm a booking, approve a quotation, modify payments, or grant administrative permissions.
+
+Use approved service data and business settings as the source of truth.
+
+Implement:
+- API key protection.
+- Input validation.
+- Rate limiting.
+- Reasonable usage limits.
+- Error handling.
+- Privacy-conscious logging.
+- Graceful fallback if the Gemini API key is missing.
+
+Do not send private customer files or sensitive personal information to the AI without explicit authorization and a justified need.
+
+---
+
+## 13. ENGLISH AND HINDI LOCALIZATION
+
+Implement full bilingual support.
+
+Translate:
+- Navigation.
+- Headings.
+- Buttons.
+- Forms.
+- Validation messages.
+- Authentication.
+- Customer dashboard.
+- Admin dashboard.
+- Booking statuses.
+- Quotations.
+- Payment messages.
+- Notifications.
+- Empty states.
+- Error states.
+- Privacy policy.
+- Terms and conditions.
+
+Use structured translation files instead of scattering hardcoded text throughout the code.
+
+Add a language switcher.
+
+Preserve the selected language during navigation.
+
+Save the user's language preference to their profile when authenticated.
+
+Use a sensible default for visitors.
+
+Ensure Hindi text renders correctly on all supported devices.
+
+---
+
+## 14. SEARCH AND BUSINESS ANALYTICS
+
+Implement database-backed search and filtering.
+
+Support search across:
+- Services.
+- Projects.
+- Enquiries.
+- Customers, for authorized administrators.
+- Quotations.
+- Bookings.
+
+Add server-side pagination and filtering.
+
+Create reports for:
+- Enquiry volume.
+- Enquiries by service.
+- Quotation acceptance rate.
+- Booking status.
+- Successful payment totals.
+- Monthly revenue.
+- Date-range trends.
+
+Define revenue as verified successful payments within the selected period, with refunds handled transparently.
+
+Do not count pending or failed payments as revenue.
+
+Respect RLS and administrator permissions in every report.
+
+Add CSV exports for authorized administrators.
+
+Do not expose customer information through public analytics endpoints.
+
+---
+
+## 15. CONTACT, NOTIFICATIONS, AND CUSTOMER COMMUNICATION
+
+Provide:
+- Click-to-call buttons.
+- Contact form.
+- Enquiry confirmation.
+- Booking status notifications.
+- Quotation availability notifications.
+- Payment confirmation messages after server verification.
+
+Email notifications may be added through a suitable email provider if credentials are configured.
+
+Do not pretend an email or SMS was sent unless the provider confirms success.
+
+Keep external notification credentials server-side.
+
+If email delivery is not configured, display the status clearly and document the required setup.
+
+---
+
+## 16. SECURITY AND PRIVACY
+
+Follow production-oriented security practices.
+
+Implement:
+- Supabase Auth session handling.
+- RLS on all exposed tables.
+- Server-side authorization for privileged actions.
+- Input validation.
+- Rate limiting.
+- Protection against unauthorized object access.
+- Protection against SQL injection and XSS.
+- Secure handling of environment variables.
+- Restricted CORS configuration where appropriate.
+- Safe error messages.
+- Audit logging.
+- Minimal personal data collection.
+- Privacy policy.
+- Terms and conditions.
+- A suitable account deletion or data-removal workflow.
+
+Never expose:
+- Supabase secret keys.
+- Supabase service-role keys.
+- Razorpay secrets.
+- Gemini API keys.
+- Private storage documents.
+
+Use frontend environment variables only for values intended to be public, such as the Supabase URL and publishable key.
+
+Place all private credentials in the appropriate server-side secret manager.
+
+Do not claim legal compliance without proper review.
+
+---
+
+## 17. ENVIRONMENT VARIABLES
+
+Generate a `.env.example` file with placeholder values only.
+
+Example frontend configuration:
+
+`VITE_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL`
+
+`VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY`
+
+Configure server-side secrets separately:
+
+`RAZORPAY_KEY_ID`
+
+`RAZORPAY_KEY_SECRET`
+
+`RAZORPAY_WEBHOOK_SECRET`
+
+`GEMINI_API_KEY`
+
+Use the correct supported environment variable names for the actual framework and deployment environment.
+
+Do not place private server-side variables in the frontend `.env` file.
+
+Do not commit real credentials to Git.
+
+Explain that frontend environment variables are incorporated into the built website and must never contain secrets.
+
+---
+
+## 18. INFINITYFREE DEPLOYMENT
+
+The intended website URL is:
+
+https://anupfabrication.infinityfree.me
+
+Prepare a static production build compatible with InfinityFree.
+
+### Deployment requirements
+
+1. Use the actual framework and package manager supported by the generated project.
+2. Provide a production build command.
+3. Generate deployable static assets.
+4. Ensure the correct entry point exists.
+5. Configure single-page application routing if needed.
+6. Avoid requiring a permanent Node.js server on InfinityFree.
+7. Host server-side business logic through Supabase Edge Functions.
+8. Document the correct InfinityFree document root, usually `htdocs`.
+9. Provide file upload instructions through the hosting file manager or FTP.
+10. Configure HTTPS and test the live website.
+11. Configure Supabase Authentication URLs and permitted origins.
+12. Test all routes directly and after refreshing the page.
+13. Verify that forms and database operations work on the deployed website.
+
+If `.htaccess` is supported by the selected hosting configuration, provide an appropriate SPA fallback configuration and ensure it does not interfere with static assets.
+
+Do not assume that the domain is active before checking it.
+
+Do not hardcode an unverified canonical URL.
+
+Do not deploy secrets or private backend code to InfinityFree.
+
+### Future domain support
+
+Make it easy to replace the initial website URL with a custom domain later.
+
+Provide instructions for updating:
+- Supabase Authentication redirect URLs.
+- Permitted origins.
+- Razorpay webhook endpoints, if necessary.
+- Canonical URLs.
+- Deployment settings.
+
+Do not assume a Hostinger hosting account exists. InfinityFree is the selected frontend host unless the owner later specifies otherwise.
+
+---
+
+## 19. SEO AND PERFORMANCE
+
+Implement:
+- Page-specific SEO titles and descriptions.
+- Semantic HTML.
+- Accessible headings.
+- Descriptive URLs.
+- Open Graph metadata.
+- Sitemap.
+- Robots.txt.
+- Canonical URL configuration when the domain is verified.
+- Optimized images.
+- Lazy loading.
+- Route-based code splitting where appropriate.
+- Good mobile performance.
+- A custom 404 page.
+- Structured data only for verified business information.
+
+Do not invent business ratings, opening hours, or other structured-data claims.
+
+---
+
+## 20. ERROR HANDLING AND CODE QUALITY
+
+Implement:
+- Strong TypeScript typing.
+- Shared validation schemas.
+- Client and server validation.
+- Database constraints.
+- Error boundaries.
+- Loading indicators.
+- Skeleton loaders.
+- Empty states.
+- Success and failure notifications.
+- Network retry behavior where appropriate.
+- Duplicate submission prevention.
+- Accessible labels.
+- Confirmation dialogs.
+- Safe logging.
+- Pagination.
+- Optimized database queries.
+
+Do not show raw stack traces or internal errors to customers.
+
+Do not silently ignore failures.
+
+All major forms must show whether a request succeeded or failed.
+
+All buttons must perform their intended action.
+
+---
+
+## 21. TESTING REQUIREMENTS
+
+Create automated tests wherever practical.
+
+### Functional tests
+
+Verify:
+- Public pages render correctly.
+- English/Hindi switching works.
+- Registration works.
+- Login and logout work.
+- Password reset works.
+- Customers can submit enquiries.
+- Enquiry files upload correctly.
+- Private files remain private.
+- Customers can access their own records.
+- Administrators can manage services and enquiries.
+- Quotations can be created and reviewed.
+- Bookings can be requested and updated.
+- Razorpay test payments are verified correctly.
+- AI responds when configured.
+- Analytics display actual database values.
+
+### Security tests
+
+Verify:
+- Anonymous users cannot access private records.
+- Customers cannot read another customer's data.
+- Customers cannot grant themselves admin privileges.
+- Customers cannot modify quotation totals.
+- Customers cannot change payment statuses.
+- Unauthorized users cannot access admin operations.
+- Private storage objects require authorization.
+- Duplicate payment webhooks are handled safely.
+- Server-side secrets never appear in frontend assets.
+
+### Quality tests
+
+Run:
+- TypeScript checks.
+- Linting.
+- Production build.
+- Automated tests.
+- Mobile responsiveness checks.
+- Accessibility checks.
+- Route refresh tests.
+- Error-state tests.
+- Missing-credential tests.
+
+Report actual results. Never claim that tests passed if they were not executed.
+
+---
+
+## 22. README AND SETUP DOCUMENTATION
+
+Generate a complete `README.md`.
+
+Include step-by-step instructions for:
+
+### Google AI Studio
+- Creating the project.
+- Reviewing generated files.
+- Running the application.
+- Continuing implementation in phases.
+- Exporting or downloading the source code.
+
+### Supabase
+- Creating a new project.
+- Configuring authentication.
+- Running SQL migrations.
+- Setting up RLS.
+- Creating storage buckets.
+- Configuring Edge Functions.
+- Adding secrets.
+- Creating the first administrator securely.
+- Testing authorization.
+- Configuring authentication redirect URLs.
+
+### Razorpay
+- Creating or accessing a merchant account.
+- Enabling test mode.
+- Configuring test keys.
+- Configuring webhooks.
+- Testing successful and failed payments.
+- Switching to live credentials after verification.
+
+### Gemini
+- Obtaining the required API credentials.
+- Configuring the server-side secret.
+- Testing the assistant.
+- Handling missing credentials.
+
+### InfinityFree
+- Creating or activating the website hosting account.
+- Activating the intended subdomain.
+- Building the frontend.
+- Uploading the production build to `htdocs`.
+- Configuring HTTPS.
+- Testing public pages and direct routes.
+- Verifying Supabase connectivity.
+- Testing authentication, forms, uploads, and payments.
+- Troubleshooting deployment errors.
+
+Include a production-readiness checklist.
+
+---
+
+## 23. IMPLEMENTATION PHASES
+
+Build the application in controlled phases.
+
+### Phase 1: Architecture and design
+- Define the application architecture.
+- Define routes and user roles.
+- Create the design system.
+- Build the responsive public pages.
+- Implement bilingual navigation.
+
+### Phase 2: Supabase foundation
+- Configure the Supabase client.
+- Create SQL migrations.
+- Create tables, indexes, and constraints.
+- Configure authentication.
+- Implement RLS.
+- Configure storage buckets.
+- Implement secure role management.
+
+### Phase 3: Core business workflows
+- Customer profiles.
+- Service catalog.
+- Contact form.
+- Quotation requests.
+- Enquiry management.
+- Customer dashboard.
+- Admin dashboard.
+
+### Phase 4: Quotations and bookings
+- Quotation generation.
+- Quotation acceptance and rejection.
+- Booking requests.
+- Availability management.
+- Booking status updates.
+- Customer notifications.
+
+### Phase 5: Payments and AI
+- Razorpay order creation.
+- Signature verification.
+- Webhook processing.
+- Payment status tracking.
+- Gemini assistant.
+- AI usage limits and error handling.
+
+### Phase 6: Analytics and localization
+- Reports.
+- CSV exports.
+- Dashboard metrics.
+- English and Hindi translations.
+- Search and filtering.
+
+### Phase 7: Testing and deployment
+- Run automated tests.
+- Fix build and type errors.
+- Verify security policies.
+- Prepare the static production build.
+- Deploy to InfinityFree.
+- Test the intended live URL.
+- Document all unfinished tasks.
+
+At the end of every phase, summarize:
+- Files created or modified.
+- Features completed.
+- Tests actually executed.
+- Errors remaining.
+- Manual setup still required.
+
+Do not rewrite working code unnecessarily when continuing to another phase.
+
+---
+
+## 24. REQUIRED FINAL DELIVERABLES
+
+Produce:
+
+1. Complete responsive website.
+2. Premium homepage and public pages.
+3. English and Hindi localization.
+4. Customer registration and authentication.
+5. Customer dashboard.
+6. Administrator dashboard.
+7. Services management.
+8. Enquiry and quotation workflows.
+9. Booking management.
+10. Supabase database migrations.
+11. RLS policies and authorization logic.
+12. Private file upload system.
+13. Razorpay server-side integration.
+14. Gemini AI assistant.
+15. Database-backed analytics.
+16. CSV export functionality.
+17. Environment variable example file.
+18. Automated tests.
+19. README with setup instructions.
+20. InfinityFree deployment instructions.
+21. Security and production-readiness checklist.
+22. List of assumptions and remaining manual tasks.
+
+---
+
+## 25. FINAL INSTRUCTIONS
+
+Start by inspecting the current Google AI Studio environment and creating a concise architecture and implementation plan.
+
+Then begin implementing the application in Phase 1.
+
+Prioritize a secure and functional core over superficial visual effects.
+
+Do not stop after generating a homepage mockup.
+
+Do not use mock data as a substitute for real Supabase integration.
+
+Do not hardcode credentials.
+
+Do not invent successful payment transactions, customer records, or test results.
+
+Do not claim the website is live until deployment has actually been verified.
+
+When external credentials or account access are required, explain exactly what I need to configure and continue implementing the parts that can be built without those credentials.
+
+If a feature cannot be completed in the current environment, explain the limitation and provide the most suitable alternative.
+
+Ensure the final frontend is compatible with InfinityFree static hosting and all protected backend operations run in a secure server-side environment.
+
+**Begin with Phase 1 now. Build the project incrementally, test each major feature, and preserve the existing working code throughout development.**

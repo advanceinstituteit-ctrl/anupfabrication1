@@ -1,0 +1,8 @@
+{
+  "name": "Anup Fabrication - Industrial & Architectural Metal Works",
+  "description": "Official web platform for Anup Fabrication in Najafgarh, New Delhi. Metal fabrication, structural steel, gates, railings, online quotations, bookings, and customer portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
