@@ -11,11 +11,13 @@ import { CustomerDashboard } from './features/customer/CustomerDashboard';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 import { QuoteRequestForm } from './features/enquiries/QuoteRequestForm';
 import { AIAssistantWidget } from './features/ai/AIAssistantWidget';
+import { InfinityFreeDeployModal } from './components/InfinityFreeDeployModal';
 import { ServiceCategory } from './types';
 
 function MainApp() {
   const [currentView, setCurrentView] = useState<string>('home');
   const [selectedCategoryForQuote, setSelectedCategoryForQuote] = useState<ServiceCategory | undefined>();
+  const [isDeployModalOpen, setIsDeployModalOpen] = useState(false);
 
   const handleSelectServiceForQuote = (cat: ServiceCategory) => {
     setSelectedCategoryForQuote(cat);
@@ -35,6 +37,7 @@ function MainApp() {
         currentView={currentView} 
         setCurrentView={navigateTo} 
         openQuoteModal={() => navigateTo('quote')}
+        openDeployModal={() => setIsDeployModalOpen(true)}
       />
 
       {/* Main View Router */}
@@ -90,7 +93,16 @@ function MainApp() {
       </main>
 
       {/* Quiet Industrial Footer */}
-      <Footer setCurrentView={navigateTo} />
+      <Footer 
+        setCurrentView={navigateTo} 
+        openDeployModal={() => setIsDeployModalOpen(true)}
+      />
+
+      {/* InfinityFree Deployment Modal */}
+      <InfinityFreeDeployModal 
+        isOpen={isDeployModalOpen} 
+        onClose={() => setIsDeployModalOpen(false)} 
+      />
 
       {/* Gemini AI Fabrication Assistant */}
       <AIAssistantWidget />

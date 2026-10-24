@@ -25,7 +25,7 @@ export const INITIAL_BUSINESS_SETTINGS: BusinessSettings = {
   phones: ['7217853257', '7838640423'],
   primary_phone: '7217853257',
   whatsapp_number: '917217853257',
-  email: 'contact@anupfabrication.infinityfree.me',
+  email: 'contact@anupfabrication.kesug.com',
   service_areas: [
     'Najafgarh',
     'Nangli Sakrawati',
@@ -35,7 +35,7 @@ export const INITIAL_BUSINESS_SETTINGS: BusinessSettings = {
     'Noida & Greater Noida',
     'Bahadurgarh & West Delhi'
   ],
-  website_url: 'https://anupfabrication.infinityfree.me',
+  website_url: 'https://anupfabrication.kesug.com',
   consultation_available: true
 };
 

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build",
+    "build": "vite build && python3 package_htdocs.py",
+    "package": "python3 package_htdocs.py",
     "preview": "vite preview",
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",

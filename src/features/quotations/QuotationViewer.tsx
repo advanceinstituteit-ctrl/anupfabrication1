@@ -55,22 +55,36 @@ export const QuotationViewer: React.FC<QuotationViewerProps> = ({ quotation, onB
 
       // 2. If window.Razorpay SDK is loaded, invoke Checkout
       if (typeof window !== 'undefined' && window.Razorpay) {
+        const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TrqxeKSgfWkjFd';
         const options = {
-          key: 'rzp_test_demo_anup', // Test key placeholder
+          key: razorpayKey,
           amount: orderAmountPaise,
           currency: 'INR',
           name: 'Anup Fabrication',
           description: `Advance for Quote ${quotation.quotation_number}`,
-          order_id: orderId.startsWith('order_') && orderId.length > 15 ? undefined : undefined,
+          order_id: orderId.startsWith('order_') && orderId.length > 15 ? orderId : undefined,
           prefill: {
             name: quotation.customer_name,
             contact: quotation.customer_phone,
-            email: currentUser?.email || 'customer@anupfabrication.in'
+            email: currentUser?.email || 'customer@anupfabrication.kesug.com'
           },
           theme: {
             color: '#f59e0b'
           },
-          handler: function (response: any) {
+          handler: async function (response: any) {
+            try {
+              await fetch('/api/razorpay/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id || orderId,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+            } catch (err) {
+              console.warn('Payment verification endpoint warning:', err);
+            }
             finalizePayment(response.razorpay_payment_id || `pay_${Date.now()}`);
           },
           modal: {

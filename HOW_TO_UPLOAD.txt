@@ -1,34 +1,50 @@
 ========================================================================
-ANUP FABRICATION - INFINITYFREE DEPLOYMENT GUIDE (403 ERROR FIX)
+ANUP FABRICATION - INFINITYFREE 403 ERROR COMPLETE FIX GUIDE
 ========================================================================
 
-403 Forbidden error aane ka mukhya kaaran:
-InfinityFree ke `htdocs` folder me direct `index.html` ya `index.php` nahi tha, 
-ya poora project source code upload ho gaya tha jisme dist/ alag folder me tha.
+KYUN AATA HAI 403 FORBIDDEN ERROR INFINITYFREE PAR?
+(Aapke screenshot ke anusar do mukhya galti hui hain):
+1. FOLDER PATH GALAT THA (/htdocs/htdocs):
+   Aapke File Manager me path "/htdocs/htdocs" ban gaya tha! 
+   Website ka root folder "/htdocs" hota hai. Agar aap files ko "/htdocs/htdocs" 
+   ya kisi subfolder me daalenge, to InfinityFree ko root me index file nahi milti 
+   aur wo 403 Forbidden error deta hai!
+   
+2. PURE PROJECT SOURCE CODE UPLOAD HO GAYA THA:
+   Aapne TypeScript/source code (.tsx, src, metadata.json, package.json) upload kar diya tha.
+   InfinityFree ek web server hai jo sirf compiled files (index.html, index.php, assets/) 
+   chala sakta hai.
 
-Humne `htdocs_upload.zip` ready kar diya hai.
-
-STEP-BY-STEP UPLOAD INSTRUCTIONS (MonstaFTP / File Manager):
 ------------------------------------------------------------------------
-1. InfinityFree vPanel me jaayein aur **Online File Manager** (MonstaFTP) open karein.
-2. `htdocs` folder ke andar jaayein.
-3. Purani saari files aur folders ko SELECT ALL karke **DELETE** kar dein (taaki clean ho jaaye).
-4. `htdocs_upload.zip` ko apne computer par download karein.
-5. `htdocs_upload.zip` ko unzip (extract) karein apne computer par.
-   Aapko ye files dikhengi:
-   - index.html
-   - index.php
-   - .htaccess
-   - assets/ (folder)
-6. In sabhi files aur folder ko seedhe `htdocs` ke andar **UPLOAD** kar dein.
-   (IMPORTANT: `index.html` direct `htdocs/index.html` hona chahiye, kisi andar ke subfolder me nahi).
+KAISE FIX KAREIN (3 SIMPLE STEPS):
+------------------------------------------------------------------------
 
-7. Agar aap zip file direct upload karna chahte hain:
-   - `htdocs_upload.zip` ko `htdocs` me upload karein.
-   - Us par Right-Click karke **Extract** / **Unzip** karein.
-   - Verify karein ki `htdocs/index.html` seedhe htdocs me dikh raha hai.
+STEP 1: PURANI SABHI FILES KO DELETE KAREIN
+1. InfinityFree vPanel (Control Panel) me jaayein.
+2. "Online File Manager" (filemanager.ai) open karein.
+3. "htdocs" folder ke andar click karein.
+   (Verify karein ki path sirf "/htdocs" ho, na ki "/htdocs/htdocs").
+4. "Select All" par click karein aur "Delete" daba dein.
+   (htdocs bilkul khali / empty hona chahiye).
 
-8. Apni website open karein:
-   https://anupfabrication.infinityfreeapp.com/
-   Website turant live open ho jayegi!
+STEP 2: HTDOCS_UPLOAD.ZIP KO EXTRACT KARKE UPLOAD KAREIN
+1. Website me "InfinityFree Deploy" button se ya direct "htdocs_upload.zip" download karein.
+2. Apne computer par "htdocs_upload.zip" ko RIGHT-CLICK karke "Extract All" (Unzip) karein.
+3. Unzip hone ke baad aapko ye 4 items milenge:
+   - index.html   (Web app ki main file)
+   - index.php    (Apache fallback file)
+   - .htaccess    (SPA routing aur rewrite rules)
+   - assets/      (CSS, JS, images ka folder)
+4. InfinityFree File Manager me "htdocs" ke andar "Upload" button se in sabhi ko upload karein.
+   *DHAYAN DEIN*: "index.html" seedhe "/htdocs/index.html" hona chahiye!
+
+STEP 3: FIREBASE AUTH DOMAIN PERMISSION (Important for Login)
+1. Firebase Console (https://console.firebase.google.com/) me jaayein.
+2. Project "ai-studio-anupfabricationi..." select karein.
+3. "Authentication" -> "Settings" -> "Authorized Domains" me jaayein.
+4. "Add domain" par click karein aur apna InfinityFree domain daal dein:
+   Example: yourname.infinityfreeapp.com ya custom domain.
+
+Ab apni website refresh karein:
+Aapki Anup Fabrication website turant 100% live chal jayegi bina kisi 403 error ke!
 ========================================================================

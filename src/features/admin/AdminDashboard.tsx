@@ -217,6 +217,16 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <a
+            href="/htdocs_upload.zip"
+            download="htdocs_upload.zip"
+            className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+            title="Download ready-to-upload ZIP for InfinityFree htdocs"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>InfinityFree ZIP</span>
+          </a>
+
           <button
             onClick={() => {
               setSelectedEnquiryForQuote(null);

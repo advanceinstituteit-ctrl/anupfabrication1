@@ -1,10 +1,33 @@
+# ----------------------------------------------------------------------
+# InfinityFree / Apache Hosting Configuration - Anup Fabrication
+# Target Domain: anupfabrication.kesug.com
+# ----------------------------------------------------------------------
+
+# Ensure directory index loads index.html first, then index.php
 DirectoryIndex index.html index.php index.htm
 
+# Enable Single Page Application (SPA) routing
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+
+  # Exclude existing physical files and directories from rewrite
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Direct all other client-side routes to index.html
+  RewriteRule ^ index.html [L]
 </IfModule>
+
+# Ensure proper MIME types for modern web assets (ES modules, CSS, JSON, SVG)
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType application/json .json
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+</IfModule>
+

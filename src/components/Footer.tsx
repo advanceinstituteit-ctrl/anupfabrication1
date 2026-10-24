@@ -1,13 +1,14 @@
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppStore } from '../lib/store';
-import { Phone, MapPin, Mail, ArrowUpRight, ShieldCheck, Clock } from 'lucide-react';
+import { Phone, MapPin, Mail, ArrowUpRight, ShieldCheck, Clock, Server } from 'lucide-react';
 
 interface FooterProps {
   setCurrentView: (view: string) => void;
+  openDeployModal?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ setCurrentView }) => {
+export const Footer: React.FC<FooterProps> = ({ setCurrentView, openDeployModal }) => {
   const { t } = useLanguage();
   const { businessSettings } = useAppStore();
 
@@ -26,8 +27,19 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentView }) => {
             <p className="text-xs text-slate-400 leading-relaxed">
               Industrial structural steel fabrication, custom boundary gates, window grills, designer railings, and heavy machinery support framing in Delhi NCR.
             </p>
-            <div className="pt-2 text-xs font-mono text-amber-400">
-              Deployment: https://anupfabrication.infinityfree.me
+            <div className="pt-2 flex flex-col gap-1.5">
+              <div className="text-xs font-mono text-slate-400">
+                Domain: <span className="text-amber-400">anupfabrication.kesug.com</span>
+              </div>
+              {openDeployModal && (
+                <button
+                  onClick={openDeployModal}
+                  className="text-left text-xs text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1.5 cursor-pointer font-semibold"
+                >
+                  <Server className="w-3.5 h-3.5" />
+                  <span>InfinityFree Deploy Kit (403 Fix)</span>
+                </button>
+              )}
             </div>
           </div>
 

@@ -1,0 +1,75 @@
+========================================================================
+ANUP FABRICATION (anupfabrication.kesug.com)
+INFINITYFREE DEPLOYMENT & 403 FIX GUIDE
+========================================================================
+
+KYUN AATA HAI 403 FORBIDDEN YA "NOT WORKING" ISSUE?
+InfinityFree par website chalane ke liye 3 zaroori batein:
+
+1. FOLDER PATH KI GALTI:
+   InfinityFree File Manager (MonstaFTP) me do tarah ke folders ho sakte hain:
+   - Case A: Agar 'anupfabrication.kesug.com' account ka primary domain hai:
+     Path hona chahiye: /htdocs/
+   - Case B: Agar 'anupfabrication.kesug.com' subdomain ya addon domain hai:
+     Path hona chahiye: /anupfabrication.kesug.com/htdocs/
+   
+   *IMPORTANT*: 
+   - Files ko kisi subfolder (jaise /htdocs/htdocs ya /htdocs/dist) me MAT daaliye!
+   - 'index.html' bilkul seedhe htdocs ke andar hona chahiye!
+
+2. DEFAULT 'index2.html' YA 'default.php' DELETE NA HONA:
+   InfinityFree naye accounts me apna ek default page daal deta hai jiska naam 'index2.html' 
+   ya 'default.php' hota hai. 
+   Agar aapne use delete nahi kiya, to server aapki website ke badle InfinityFree ka 
+   purana landing page ya suspended notice dikhata rehta hai!
+   -> Isliye htdocs ke andar ki saari purani files ko SELECT ALL karke DELETE karein.
+
+3. ZIP FILE EXTRACT KARKE UPLOAD KARNA:
+   'htdocs_upload.zip' ko seedhe server par nahi rakhna hai. 
+   Pehle apne computer par Right-Click karke "Extract All" karein, 
+   aur phir andar ke in 4 items ko upload karein:
+   - index.html
+   - index.php
+   - .htaccess
+   - assets/ (folder)
+
+------------------------------------------------------------------------
+STEP-BY-STEP UPLOAD GUIDE (anupfabrication.kesug.com):
+------------------------------------------------------------------------
+
+STEP 1: PURANI SABHI FILES KO DELETE KAREIN
+1. InfinityFree vPanel (app.infinityfree.com) me login karein.
+2. "Online File Manager" open karein.
+3. Agar samne 'anupfabrication.kesug.com' folder dikhe, to uske andar jaakar 'htdocs' kholein.
+   Agar seedhe 'htdocs' dikhe, to 'htdocs' kholein.
+4. Upar "Select All" par click karein aur "Delete" daba dein.
+   (htdocs bilkul khali hona chahiye, koi purana index2.html ya htdocs folder na rahe).
+
+STEP 2: HTDOCS_UPLOAD.ZIP KO EXTRACT KARKE UPLOAD KAREIN
+1. 'htdocs_upload.zip' download karein.
+2. Apne computer par Right-Click -> "Extract All" karein.
+3. Extracted folder ke andar jaakar in 4 items ko File Manager ke "Upload" button se upload karein:
+   - index.html   (Web app root)
+   - index.php    (Fallback runner)
+   - .htaccess    (SPA routing rules)
+   - assets/      (JS/CSS bundle folder)
+   
+   *Check*: File Manager me path aisa dikhna chahiye:
+   .../htdocs/index.html
+   .../htdocs/index.php
+   .../htdocs/.htaccess
+   .../htdocs/assets/
+
+STEP 3: FIREBASE AUTH DOMAIN PERMISSION (Login & Customer Portal)
+1. Firebase Console (https://console.firebase.google.com/) kholein.
+2. Project "ai-studio-anupfabricationi..." select karein.
+3. "Authentication" -> "Settings" -> "Authorized Domains" me jaayein.
+4. "Add domain" click karein aur add karein:
+   anupfabrication.kesug.com
+5. Save karein.
+
+STEP 4: SITE TEST KAREIN
+Apne browser me kholein:
+http://anupfabrication.kesug.com  ya  https://anupfabrication.kesug.com
+(Note: Agar pehli baar InfinityFree ka verification page aaye, to 2 second wait karein, page automatically refresh hokar Anup Fabrication website load ho jayegi!)
+========================================================================

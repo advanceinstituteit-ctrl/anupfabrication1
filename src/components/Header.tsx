@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useAppStore } from '../lib/store';
-import { Phone, Shield, User, Menu, X, Globe, Wrench } from 'lucide-react';
+import { Phone, Shield, User, Menu, X, Globe, Wrench, Server } from 'lucide-react';
 
 interface HeaderProps {
   currentView: string;
   setCurrentView: (view: string) => void;
   openQuoteModal?: () => void;
+  openDeployModal?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, openQuoteModal }) => {
+export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, openQuoteModal, openDeployModal }) => {
   const { language, setLanguage, t } = useLanguage();
   const { currentUser, switchToRole, businessSettings, signInWithGoogle, signOutUser } = useAppStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -160,6 +161,17 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, ope
             )}
           </div>
 
+          {/* InfinityFree Deploy Action Button */}
+          <button
+            onClick={openDeployModal}
+            title="Download InfinityFree deploy package & fix 403 error"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm hover:border-amber-400"
+          >
+            <Server className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">InfinityFree Deploy</span>
+            <span className="sm:hidden">Deploy</span>
+          </button>
+
           {/* Primary Action Button */}
           <button
             onClick={() => {
@@ -221,6 +233,17 @@ export const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, ope
           >
             <Shield className="w-4 h-4" />
             {t('nav_admin')}
+          </button>
+          
+          <button
+            onClick={() => {
+              if (openDeployModal) openDeployModal();
+              setMobileMenuOpen(false);
+            }}
+            className="block w-full text-left py-2 text-sm font-semibold text-amber-300 hover:text-amber-200 flex items-center gap-2"
+          >
+            <Server className="w-4 h-4 text-amber-400" />
+            <span>InfinityFree Deployment Guide</span>
           </button>
           
           <div className="pt-3 border-t border-slate-800 flex items-center justify-between">

@@ -1,9 +1,14 @@
 import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import { GoogleGenAI } from '@google/genai';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -91,16 +96,56 @@ app.post('/api/razorpay/create-order', async (req, res) => {
       return res.status(400).json({ error: 'Valid payment amount in paise is required' });
     }
 
-    // In a live environment with RAZORPAY_KEY_ID & RAZORPAY_KEY_SECRET,
-    // Razorpay Node SDK creates the authoritative order:
-    // const order = await razorpay.orders.create({ amount: amount_paise, currency: 'INR', receipt: quotation_id });
-    const orderId = `order_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`;
+    const keyId = process.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TrqxeKSgfWkjFd';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'DyM7lK5IRZ9gSi09SbDrA294';
 
+    // If Razorpay keys are configured, attempt real order creation via Razorpay API
+    if (keyId && keySecret && !keyId.includes('YOUR_KEY_ID')) {
+      try {
+        const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+        const rzpResponse = await fetch('https://api.razorpay.com/v1/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authHeader
+          },
+          body: JSON.stringify({
+            amount: amount_paise,
+            currency: 'INR',
+            receipt: (quotation_id || `rcpt_${Date.now()}`).slice(0, 40),
+            notes: {
+              customer_name: customer_name || 'Customer',
+              customer_phone: customer_phone || '',
+              platform: 'Anup Fabrication'
+            }
+          })
+        });
+
+        if (rzpResponse.ok) {
+          const rzpData = await rzpResponse.json();
+          return res.json({
+            order_id: rzpData.id,
+            amount_paise: rzpData.amount,
+            currency: rzpData.currency,
+            quotation_id,
+            key_id: keyId
+          });
+        } else {
+          const errText = await rzpResponse.text();
+          console.warn('Razorpay live API order creation rejected or credentials invalid, falling back to simulated order:', errText);
+        }
+      } catch (apiErr) {
+        console.warn('Razorpay fetch call failed:', apiErr);
+      }
+    }
+
+    const orderId = `order_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`;
     res.json({
       order_id: orderId,
       amount_paise,
       currency: 'INR',
-      quotation_id
+      quotation_id,
+      key_id: keyId
     });
   } catch (err: any) {
     console.error('Error creating Razorpay order:', err);
@@ -112,7 +157,7 @@ app.post('/api/razorpay/create-order', async (req, res) => {
 app.post('/api/razorpay/verify-payment', async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-    const webhookSecret = process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_WEBHOOK_SECRET;
+    const webhookSecret = process.env.RAZORPAY_KEY_SECRET || 'DyM7lK5IRZ9gSi09SbDrA294';
 
     if (webhookSecret && razorpay_order_id && razorpay_signature) {
       const generatedSignature = crypto
@@ -134,6 +179,57 @@ app.post('/api/razorpay/verify-payment', async (req, res) => {
   } catch (err: any) {
     console.error('Error verifying payment:', err);
     res.status(500).json({ verified: false, error: 'Payment verification failed' });
+  }
+});
+
+// 4. Reliable Binary & Base64 Download Endpoints for InfinityFree deployment
+app.get(['/api/download/htdocs_upload.zip', '/htdocs_upload.zip'], (req, res) => {
+  const publicZip = path.resolve(__dirname, 'public', 'htdocs_upload.zip');
+  const rootZip = path.resolve(__dirname, 'htdocs_upload.zip');
+  const targetZip = fs.existsSync(publicZip) ? publicZip : (fs.existsSync(rootZip) ? rootZip : null);
+
+  if (targetZip) {
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="htdocs_upload.zip"');
+    res.download(targetZip, 'htdocs_upload.zip', (err) => {
+      if (err && !res.headersSent) {
+        console.error('Download error:', err);
+        res.status(500).send('Error downloading zip file');
+      }
+    });
+  } else {
+    res.status(404).send('Deploy package not found. Run npm run build first.');
+  }
+});
+
+app.get('/api/download/zip-base64', (req, res) => {
+  const publicZip = path.resolve(__dirname, 'public', 'htdocs_upload.zip');
+  const rootZip = path.resolve(__dirname, 'htdocs_upload.zip');
+  const targetZip = fs.existsSync(publicZip) ? publicZip : (fs.existsSync(rootZip) ? rootZip : null);
+
+  if (targetZip) {
+    const fileBuffer = fs.readFileSync(targetZip);
+    res.json({
+      filename: 'htdocs_upload.zip',
+      size: fileBuffer.length,
+      base64: fileBuffer.toString('base64')
+    });
+  } else {
+    res.status(404).json({ error: 'Deploy package not found' });
+  }
+});
+
+app.get('/compiled_index.html', (req, res) => {
+  const distHtml = path.resolve(__dirname, 'dist', 'index.html');
+  const publicHtml = path.resolve(__dirname, 'public', 'compiled_index.html');
+  const targetHtml = fs.existsSync(distHtml) ? distHtml : (fs.existsSync(publicHtml) ? publicHtml : null);
+
+  if (targetHtml) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename="index.html"');
+    res.sendFile(targetHtml);
+  } else {
+    res.status(404).send('Compiled HTML not found');
   }
 });
 

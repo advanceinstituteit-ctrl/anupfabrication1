@@ -22,7 +22,7 @@ export const ContactPage: React.FC = () => {
       await createEnquiry({
         customer_name: name,
         phone: phone,
-        email: `${phone}@contact.anupfabrication.in`,
+        email: `${phone}@anupfabrication.kesug.com`,
         service_category: 'custom_metal',
         project_title: 'Direct Website Inquiry',
         project_description: message,
